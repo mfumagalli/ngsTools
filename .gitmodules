@@ -1,0 +1,15 @@
+[submodule "ngsSim"]
+	path = ngsSim
+	url = https://github.com/mfumagalli/ngsSim.git
+[submodule "ngsUtils"]
+	path = ngsUtils
+	url = https://github.com/mfumagalli/ngsUtils.git
+[submodule "ngsPopGen"]
+	path = ngsPopGen
+	url = https://github.com/mfumagalli/ngsPopGen.git
+[submodule "ngsF"]
+	path = ngsF
+	url = https://github.com/fgvieira/ngsF.git
+[submodule "angsd"]
+	path = angsd
+	url = https://github.com/fgvieira/angsd.git
