@@ -39,6 +39,8 @@ To install these tools just run:
     % make
     % make test
 
+NOTE: Test scripts do not work for Mac, yet.
+
 Executables are built into each tool directory in the repository. If you wish to clean all binaries and intermediate files:
 
     % make clean
