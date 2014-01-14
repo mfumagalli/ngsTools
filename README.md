@@ -33,6 +33,10 @@ To download ngsTools and its submodules use:
 
     % git clone --recursive https://github.com/mfumagalli/ngsTools.git
 
+if you prefer, although it is not recomended, you can download it from the Nielsen lab [webpage](http://cteg.berkeley.edu/~nielsen/resources/software/) and run:
+
+    % tar -xvf  ngsTools_20140114.tar.gz
+
 To install these tools just run:
 
     % cd ngsTools
