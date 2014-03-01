@@ -4,7 +4,7 @@ NGS (Next-Generation Sequencing) technologies have revolutionized population gen
 
 Low sequencing depth, along with high error rates stemming from base calling and mapping errors, cause SNP (Single Nucleotide Polymorphism) and genotype calling from NGS data to be associated with considerable statistical uncertainty. Recently, probabilistic models, which take these errors into account, have been proposed to accurately assign genotypes and estimate allele frequencies (e.g. [Nielsen et al., 2012](http://www.ncbi.nlm.nih.gov/pubmed/22911679); for a review [Nielsen et al., 2011](http://www.ncbi.nlm.nih.gov/pubmed/21587300)).
 
-__ngsTools__ is a collection of programs for population genetics analyses from NGS data, taking into account its statistical uncertainty. The methods implemented in these programs do not rely on SNP or genotype calling, and are particularly suitable for low sequencing depth data. An application note illustrating its application has published [Fumagalli et al., 2014](http://www.ncbi.nlm.nih.gov/pubmed/24458950).
+__ngsTools__ is a collection of programs for population genetics analyses from NGS data, taking into account its statistical uncertainty. The methods implemented in these programs do not rely on SNP or genotype calling, and are particularly suitable for low sequencing depth data. An application note illustrating its application has published ([Fumagalli et al., 2014](http://www.ncbi.nlm.nih.gov/pubmed/24458950)).
 
 NOTE - this repository is intended for general use as it groups together the latest stable version of each tool. Developers may want to check each tool's main repository.
 
