@@ -66,3 +66,61 @@ NOTE for developers: if you wish to make changes and update the whole package:
 ## Input Files
 
 All programs receive as input files produced by ANGSD. In general, these files can contain genotype likelihoods, genotype posterior probabilities, sample allele frequency posterior probabilities or an estimate of the SFS (Site Frequency Spectrum). Please refer to each tool's repository for more explanations and examples on how these tools work.
+
+## INFO
+
+# Authors
+
+Main programmer (who to blame): Matteo Fumagalli.
+Other programmers and developers: Filipe G. Vieira, Tyler Lynderoth, Rasmus Nielsen.
+Some lines of code have been 'taken' from: Thorfinn Korneliussen, Anders Albrechtsen, Jacob Crawford.
+
+# Updates
+
+If you want to be updated about new releases and fixed bugs please consider joining the ngsTools official google group at https://groups.google.com/forum/#!forum/ngstools-user.
+For informal questions feel free to contact Matteo Fumagalli, at mfumagalli82 [at] gmail [dot] com.
+
+# Citation
+
+ngsTools package can be cited as:
+
+    ngsTools: methods for population genetics analyses from next-generation sequencing data.
+    Fumagalli M1, Vieira FG, Linderoth T, Nielsen R.
+    Bioinformatics. 2014 Feb 14. [Epub ahead of print]
+    http://www.ncbi.nlm.nih.gov/pubmed/24458950
+
+Methods in ANGSD can be cited as:
+
+	SNP calling, genotype calling, and sample allele frequency estimation from New-Generation Sequencing data.
+	Nielsen R, Korneliussen T, Albrechtsen A, Li Y, Wang J.
+	PLoS One. 2012;7(7):e37558. doi: 10.1371/journal.pone.0037558. Epub 2012 Jul 24.
+
+FST and PCA methods can be cited as:
+
+	Quantifying Population Genetic Differentiation from Next-Generation Sequencing Data.
+	Fumagalli M, Vieira FG, Korneliussen TS, Linderoth T, Huerta-Sánchez E, Albrechtsen A, Nielsen R.
+	Genetics. 2013 Nov;195(3):979-92. doi: 10.1534/genetics.113.154740. Epub 2013 Aug 26.
+
+Inbreeding estimation can be cited as:
+
+	Estimating inbreeding coefficients from NGS data: impact on genotype calling and allele frequency estimation.
+	Vieira FG, Fumagalli M, Albrechtsen A, Nielsen R.
+	Genome Res. 2013 Nov;23(11):1852-61. doi: 10.1101/gr.157388.113. Epub 2013 Aug 15.
+
+Nucleotide diversity estimates from NGS data implemented here have been proposed in:
+
+	Sequencing of 50 human exomes reveals adaptation to high altitude.
+	Yi X, Liang Y, Huerta-Sanchez E, Jin X, Cuo ZX, Pool JE, Xu X, Jiang H, Vinckenbosch N, Korneliussen TS, Zheng H, Liu T, He W, Li K, Luo R, Nie X, Wu H, Zhao M, Cao H, Zou J, Shan Y, Li S, Yang Q, Asan, Ni P, Tian G, Xu J, Liu X, Jiang T, Wu R, Zhou G, Tang M, Qin J, Wang T, Feng S, Li G, Huasang, Luosang J, Wang W, Chen F, Wang Y, Zheng X, Li Z, Bianba Z, Yang G, Wang X, Tang S, Gao G, Chen Y, Luo Z, Gusang L, Cao Z, Zhang Q, Ouyang W, Ren X, Liang H, Zheng H, Huang Y, Li J, Bolund L, Kristiansen K, Li Y, Zhang Y, Zhang X, Li R, Li S, Yang H, Nielsen R, Wang J, Wang J.
+	Science. 2010 Jul 2;329(5987):75-8. doi: 10.1126/science.1190371.
+
+	Calculation of Tajima's D and other neutrality test statistics from low depth next-generation sequencing data.
+	Korneliussen TS, Moltke I, Albrechtsen A, Nielsen R.
+	BMC Bioinformatics. 2013 Oct 2;14(1):289. [Epub ahead of print]
+
+	Assessing the effect of sequencing depth and sample size in population genetics inferences.
+	Fumagalli M.
+	PLoS One. 2013 Nov 18;8(11):e79667. doi: 10.1371/journal.pone.0079667.
+
+
+
+
