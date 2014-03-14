@@ -51,7 +51,7 @@ Executables are built into each tool directory in the repository. If you wish to
 
 NOTE: Please do not use ANGSD repository which is present here only for testing purposes. Refer to http://popgen.dk/wiki/index.php/ANGSD to obtain the latest version.
 
-To get the latest version of the package:
+To get the latest version of ngsTools package:
 
     % git pull
     % git submodule update
