@@ -49,6 +49,8 @@ Executables are built into each tool directory in the repository. If you wish to
 
     % make clean
 
+NOTE: Please do not use ANGSD repository which is present here only for testing purposes. Refer to http://popgen.dk/wiki/index.php/ANGSD to obtain the latest version.
+
 To get the latest version of the package:
 
     % git pull
