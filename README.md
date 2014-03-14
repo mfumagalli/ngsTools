@@ -63,6 +63,7 @@ NOTE for developers: if you wish to make changes and update the whole package:
     % # in ngsTools main repo
     % git commit -a -m 'Submodules updated'
     % git push
+    % # check that everything went well: git status
 
 ## Input Files
 
