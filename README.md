@@ -57,6 +57,7 @@ To get the latest version of the package:
 NOTE for developers: if you wish to make changes and update the whole package:
 
     % # in the modified repo
+    % # be sure to be on the master branch: git checkout master
     % git commit -a -m 'Local changes...'
     % git push
     % # in ngsTools main repo
@@ -71,7 +72,7 @@ All programs receive as input files produced by ANGSD. In general, these files c
 
 # Authors
 
-Main programmer (who to blame): Matteo Fumagalli.
+Matteo Fumagalli.
 Other programmers and developers: Filipe G. Vieira, Tyler Lynderoth, Rasmus Nielsen.
 Some lines of code have been 'taken' from: Thorfinn Korneliussen, Anders Albrechtsen, Jacob Crawford.
 
