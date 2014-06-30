@@ -10,3 +10,6 @@
 [submodule "ngsF"]
 	path = ngsF
 	url = https://github.com/fgvieira/ngsF.git
+[submodule "angsd"]
+	path = angsd
+	url = https://github.com/ANGSD/angsd.git
