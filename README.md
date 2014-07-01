@@ -33,9 +33,7 @@ To download ngsTools and its submodules use:
 
     % git clone --recursive https://github.com/mfumagalli/ngsTools.git
 
-if you prefer, although it is not recomended, you can download it from the Nielsen lab [webpage](http://cteg.berkeley.edu/~nielsen/resources/software/) and run:
-
-    % tar -xvf  ngsTools_20140114.tar.gz
+If you prefer, although it is not recomended, you can download a zipped folder on the right side of this page ("Download ZIP"). 
 
 To install these tools just run:
 
@@ -49,7 +47,7 @@ Executables are built into each tool directory in the repository. If you wish to
 
     % make clean
 
-NOTE: Please do not use ANGSD repository which is present here only for testing purposes. Refer to http://popgen.dk/wiki/index.php/ANGSD to obtain the latest version.
+NOTE: We now provide a direct link to ANGSD's repository on github. We anyway recommend users to refer to http://popgen.dk/wiki/index.php/ANGSD to ensure that the latest version is in use.
 
 To get the latest version of ngsTools package:
 
@@ -75,8 +73,8 @@ All programs receive as input files produced by ANGSD. In general, these files c
 
 # Authors
 
-Matteo Fumagalli.
-Other programmers and developers: Filipe G. Vieira, Tyler Lynderoth, Rasmus Nielsen.
+Matteo Fumagalli & Filipe G. Vieira.
+Other programmers and developers: Tyler Lynderoth, Rasmus Nielsen.
 Some lines of code have been 'taken' from: Thorfinn Korneliussen, Anders Albrechtsen, Jacob Crawford.
 
 # Updates
@@ -89,8 +87,8 @@ For informal questions feel free to contact Matteo Fumagalli, at mfumagalli82 [a
 ngsTools package can be cited as:
 
     ngsTools: methods for population genetics analyses from next-generation sequencing data.
-    Fumagalli M1, Vieira FG, Linderoth T, Nielsen R.
-    Bioinformatics. 2014 Feb 14. [Epub ahead of print]
+    Fumagalli M, Vieira FG, Linderoth T, Nielsen R.
+    2014 May 15;30(10):1486-7. doi: 10.1093/bioinformatics/btu041. Epub 2014 Jan 23.
     http://www.ncbi.nlm.nih.gov/pubmed/24458950
 
 Methods in ANGSD can be cited as:
