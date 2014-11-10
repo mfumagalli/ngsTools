@@ -27,7 +27,7 @@ NOTE - this repository is intended for general use as it groups together the lat
  * __GetSwitchedGeno__ - Switch major/minor in genotype posterior probabilities files
  * __GetSwitchedSfs__ - Switch major/minor in sample allele frequency posterior probabilities files
 
-[ngsDist](https://github.com/fgviera/ngsDist) is a program that estimates genetic distances for phylogenetic analyses from genotype posterior probabilities. It is not officially included in ngsTools, and therefore must be installed separately.
+[ngsDist](https://github.com/fgvieira/ngsDist) is a program that estimates genetic distances for phylogenetic analyses from genotype posterior probabilities. It is not officially included in ngsTools, and therefore must be installed separately.
 
 ## Installation
 
