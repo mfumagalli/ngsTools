@@ -1,6 +1,6 @@
 #ngsTools
 
-NGS (Next-Generation Sequencing) technologies have revolutionized population genetic research by enabling unparalleled data collection from the genomes or subsets of genomes from many individuals. Current technologies produce short fragments of sequenced DNA called _reads_ that are either de novo assembled or mapped to a pre-existing reference genome. This leads to chromosomal positions being sequenced a variable number of times across the genome, usually referred to as the sequencing depth. Individual genotypes are then inferred from the proportion of nucleotide bases covering each site after the reads have been aligned.
+NGS (Next-Generation Sequencing) technologies have revolutionised population genetic research by enabling unparalleled data collection from the genomes or subsets of genomes from many individuals. Current technologies produce short fragments of sequenced DNA called _reads_ that are either _de novo_ assembled or mapped to a pre-existing reference genome. This leads to chromosomal positions being sequenced a variable number of times across the genome, usually referred to as the sequencing depth. Individual genotypes are then inferred from the proportion of nucleotide bases covering each site after the reads have been aligned.
 
 Low sequencing depth, along with high error rates stemming from base calling and mapping errors, cause SNP (Single Nucleotide Polymorphism) and genotype calling from NGS data to be associated with considerable statistical uncertainty. Recently, probabilistic models, which take these errors into account, have been proposed to accurately assign genotypes and estimate allele frequencies (e.g. [Nielsen et al., 2012](http://www.ncbi.nlm.nih.gov/pubmed/22911679); for a review [Nielsen et al., 2011](http://www.ncbi.nlm.nih.gov/pubmed/21587300)).
 
@@ -14,7 +14,7 @@ NOTE - this repository is intended for general use as it groups together the lat
 
 * [ngsF](https://github.com/fgvieira/ngsF) - This program provides a method to estimate individual inbreeding coefficients using an EM algorithm ([Vieira et al., 2013](http://www.ncbi.nlm.nih.gov/pubmed/23950147)). These can provide insight into a population's mating system or demographic history and, more importantly, they can be used as a prior in ANGSD.
 
-* [ngsPopGen](https://github.com/mfumagalli/ngsPopGen) - Several tools to perform population genetic analyses from NGS data ([Fumagalli et al., 2013](http://www.ncbi.nlm.nih.gov/pubmed/23979584), [Fumagalli., 2013](http://www.ncbi.nlm.nih.gov/pubmed/24260275)).
+* [ngsPopGen](https://github.com/mfumagalli/ngsPopGen) - Several tools to perform population genetic analyses from NGS data ([Fumagalli et al., 2013](http://www.ncbi.nlm.nih.gov/pubmed/23979584), [Fumagalli, 2013](http://www.ncbi.nlm.nih.gov/pubmed/24260275)).
  * __ngsFst__ - Quantifying population genetic differentiation
  * __ngsCovar__ - Population structure via PCA (principal components analysis)
  * __ngs2dSFS__ - Estimate 2D-SFS from posterior probabilities of sample allele frequencies
@@ -26,6 +26,8 @@ NOTE - this repository is intended for general use as it groups together the lat
  * __GetSubSim__ - Select a subset of simulated data files
  * __GetSwitchedGeno__ - Switch major/minor in genotype posterior probabilities files
  * __GetSwitchedSfs__ - Switch major/minor in sample allele frequency posterior probabilities files
+
+[ngsDist](https://github.com/fgviera/ngsDist) is a program that estimates genetic distances for phylogenetic analyses from genotype posterior probabilities. It is not officially included in ngsTools, and therefore must be installed separately.
 
 ## Installation
 
@@ -39,9 +41,6 @@ To install these tools just run:
 
     % cd ngsTools
     % make
-    % make test
-
-NOTE: Test scripts do not work for Mac, yet.
 
 Executables are built into each tool directory in the repository. If you wish to clean all binaries and intermediate files:
 
@@ -80,7 +79,7 @@ Some lines of code have been 'taken' from: Thorfinn Korneliussen, Anders Albrech
 # Updates
 
 If you want to be updated about new releases and fixed bugs please consider joining the ngsTools official google group at https://groups.google.com/forum/#!forum/ngstools-user.
-For informal questions feel free to contact Matteo Fumagalli, at mfumagalli82 [at] gmail [dot] com.
+For informal questions (not about ANGSD, only for ngsTools) feel free to contact Matteo Fumagalli, at mfumagalli82 [at] gmail [dot] com.
 
 # Citation
 
