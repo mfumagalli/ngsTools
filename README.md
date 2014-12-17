@@ -46,7 +46,7 @@ Executables are built into each tool directory in the repository. If you wish to
 
     % make clean
 
-NOTE: We now provide a direct link to ANGSD's repository on github. We anyway recommend users to refer to http://popgen.dk/wiki/index.php/ANGSD to ensure that the latest version is in use.
+NOTE: We now provide a direct link to ANGSD's repository on github. We anyway recommend users to refer to its official website [here](http://popgen.dk/wiki/index.php/ANGSD) to ensure that the latest version is in use.
 
 To get the latest version of ngsTools package:
 
@@ -70,6 +70,11 @@ All programs receive as input files produced by ANGSD. In general, these files c
 
 ## INFO
 
+# Tutorial
+
+A short tutorial on how some basic analyses using ngsTools from BAM files can be found [here](https://github.com/mfumagalli/ngsTools/blob/master/TUTORIAL.md).
+For most cases, here you will find all the information you need.
+
 # Authors
 
 Matteo Fumagalli & Filipe G. Vieira.
@@ -90,7 +95,12 @@ ngsTools package can be cited as:
     2014 May 15;30(10):1486-7. doi: 10.1093/bioinformatics/btu041. Epub 2014 Jan 23.
     http://www.ncbi.nlm.nih.gov/pubmed/24458950
 
-Methods in ANGSD can be cited as:
+ANGSD can be cited as:
+
+	ANGSD: Analysis of Next Generation Sequencing Data.
+	Korneliussen T, Albrechtsen A, Nielsen R.
+	BMC Bioinformatics. 2014 Nov 25;15(1):356. [Epub ahead of print]
+	http://www.ncbi.nlm.nih.gov/pubmed/25420514
 
 	SNP calling, genotype calling, and sample allele frequency estimation from New-Generation Sequencing data.
 	Nielsen R, Korneliussen T, Albrechtsen A, Li Y, Wang J.
