@@ -2,6 +2,15 @@
 A short tutorial to some basic analyses using ngsTools from BAM files
 ===============
 
+Please be sure you are using the most updated version of ngsTools. In doubt please run: 
+
+	git pull
+	make clean
+	make
+	
+inside the ngsTools directory.
+
+
 Settings
 ----------
 
