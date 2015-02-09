@@ -43,6 +43,8 @@ Create a subset of 5 individuals into 2 populations.
 
 	$SAMTOOLS faidx chimpHg19.fa
 
+As a note for the general use, in case an ancestral sequence is not available, analyses on FST, PCA, nucleotide diversity (but not number of fixed differences) can be carried out using the reference sequence to polarise your data. Please be aware that, under this scenario, some quantities (e.g. the unfolded joint site frequency spectrum) will be nonsense.
+
 
 Filtering using ANGSD
 ----------------------
@@ -159,7 +161,7 @@ For plotting purposes, we create a dummy PLINK cluster file.
 
 This script will calculate principal components and plot them.
 
-	Rscript scripts/plotPCA.R -i test.cover -c 1-2 -a test.pops.clst -o test.pca.pdf
+	Rscript scripts/plotPCA.R -i test.covar -c 1-2 -a test.pops.clst -o test.pca.pdf
 	evince test.pca.pdf
 
 Genetic distances
