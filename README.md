@@ -19,6 +19,7 @@ NOTE - this repository is intended for general use as it groups together the lat
  * __ngsCovar__ - Population structure via PCA (principal components analysis)
  * __ngs2dSFS__ - Estimate 2D-SFS from posterior probabilities of sample allele frequencies
  * __ngsStat__ - Estimate number of segregating sites, expected average heterozygosity, and number of fixed differences (if data from 2 populations are provided).
+
 * [ngsUtils](https://github.com/mfumagalli/ngsUtils) - General tools to manipulate data.
  * __GetMergedGeno__ - Merge genotype posterior probabilities files
  * __GetSubGeno__ - Select a subset of genotype posterior probabilities files
@@ -27,9 +28,15 @@ NOTE - this repository is intended for general use as it groups together the lat
  * __GetSwitchedGeno__ - Switch major/minor in genotype posterior probabilities files
  * __GetSwitchedSfs__ - Switch major/minor in sample allele frequency posterior probabilities files
 
-[ngsDist](https://github.com/fgvieira/ngsDist) is a program that estimates genetic distances for phylogenetic analyses from genotype posterior probabilities. It is not officially included in ngsTools, and therefore must be installed separately.
+* [ngsDist](https://github.com/fgvieira/ngsDist) is a program that estimates genetic distances for phylogenetic analyses from genotype posterior probabilities. It is not yet officially included in ngsTools, and therefore must be installed separately.
 
 ## Installation
+
+`ngsTools` can be easily installed but some packages have some external dependencies:
+
+* `zlib`: v1.2.7 tested on Debian 7.8 (wheezy)
+* `gsl` : v1.15 tested on Debian 7.8 (wheezy)
+* `md5sum`: only needed for `make test`
 
 To download ngsTools and its submodules use:
 
