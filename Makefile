@@ -1,5 +1,5 @@
 
-TOOLS = ngsSim angsd ngsF ngsPopGen ngsUtils
+TOOLS = angsd ngsPopGen ngsUtils ngsSim ngsF
 
 all: $(TOOLS)
 
