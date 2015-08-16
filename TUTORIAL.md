@@ -68,10 +68,14 @@ Despite all methods work even when all sites are considered, excluding sites whi
 We do this filtering for the whole sample as well as for both populations.
 
 	$ANGSD/angsd -b bam.filelist -anc chimpHg19.fa -remove_bads -unique_only -minMapQ 30 -minQ 20 -only_proper_pairs 1 -trim 0 -minInd 6 -out test.pops.angsd -P 5 -setMinDepth 20 -setMaxDepth 100 -r 1: -GL 1 -doSaf 1 -doMaf 2 -minMaf 0.05 -doMajorMinor 1
-
+	
         $ANGSD/angsd -b bam.pop1.filelist -anc chimpHg19.fa -remove_bads -unique_only -minMapQ 30 -minQ 20 -only_proper_pairs 1 -trim 0 -minInd 3 -out test.pop1.angsd -P 5 -setMinDepth 10 -setMaxDepth 50 -r 1: -GL 1 -doSaf 1
 
 	$ANGSD/angsd -b bam.pop2.filelist -anc chimpHg19.fa -remove_bads -unique_only -minMapQ 30 -minQ 20 -only_proper_pairs 1 -trim 0 -minInd 3 -out test.pop2.angsd -P 5 -setMinDepth 10 -setMaxDepth 50 -r 1: -GL 1 -doSaf 1
+
+IMPORTANT NOTE: if you use the latest version of ANGSD (>0.800), then, in order for these commands to work, you need to convert the .saf file format into the old one, using `ANGSD realSFS print` tool, as:
+
+	$ANGSD/misc/realSFS print pop1.saf.idx -oldout 1 > pop1.saf
 
 In case you analyse more than one population, you first need to get the subset of overlapping sites, stored in the file `intersect.txt`.
 
