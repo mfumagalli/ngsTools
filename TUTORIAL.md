@@ -11,12 +11,21 @@ Please be sure you are using the most updated version of ngsTools. In doubt plea
 inside the ngsTools directory.
 
 
+Compatibility issues with ANGSD
+---------------
+
+IMPORTANT NOTE: please note that ngsTools is compatible only with versions of ANGSD <0.800.
+If you are using a more recent version of ANGSD (very likely), here some suggestions:
+* ANGSD can now estimate [FST](http://popgen.dk/angsd/index.php/Fst) and [nucleotide diversity](http://popgen.dk/angsd/index.php/Tajima) and we recommend to use these implementations instead of ngsTools. ANGSD has a better implementation to automatically get the overlapping sites between populations.
+* Population structure can be investigated via Multi Dimensional Scaling (MDS) from a matrix of genetic distances, which can be estimated with ngsDist (compatible with the most recent version of ANGSD)
+* For PCA only, we recommend to use ngsTools with an older version of ANGSD <0.800 to be sure to have full compatibility
+
 Settings
 ----------
 
 Set directories to installed programs:
 
-	ANGSD=~/angsd
+	ANGSD=~/angsd # <0.800
 	SAMTOOLS=samtools
 	NGSTOOLS=~/ngsTools
 	NGSDIST=~/ngsDist
@@ -69,19 +78,17 @@ We do this filtering for the whole sample as well as for both populations.
 
 	$ANGSD/angsd -b bam.filelist -anc chimpHg19.fa -remove_bads -unique_only -minMapQ 30 -minQ 20 -only_proper_pairs 1 -trim 0 -minInd 6 -out test.pops.angsd -P 5 -setMinDepth 20 -setMaxDepth 100 -r 1: -GL 1 -doSaf 1 -doMaf 2 -minMaf 0.05 -doMajorMinor 1
 	
-        $ANGSD/angsd -b bam.pop1.filelist -anc chimpHg19.fa -remove_bads -unique_only -minMapQ 30 -minQ 20 -only_proper_pairs 1 -trim 0 -minInd 3 -out test.pop1.angsd -P 5 -setMinDepth 10 -setMaxDepth 50 -r 1: -GL 1 -doSaf 1
+	$ANGSD/angsd -b bam.pop1.filelist -anc chimpHg19.fa -remove_bads -unique_only -minMapQ 30 -minQ 20 -only_proper_pairs 1 -trim 0 -minInd 3 -out test.pop1.angsd -P 5 -setMinDepth 10 -setMaxDepth 50 -r 1: -GL 1 -doSaf 1
 
 	$ANGSD/angsd -b bam.pop2.filelist -anc chimpHg19.fa -remove_bads -unique_only -minMapQ 30 -minQ 20 -only_proper_pairs 1 -trim 0 -minInd 3 -out test.pop2.angsd -P 5 -setMinDepth 10 -setMaxDepth 50 -r 1: -GL 1 -doSaf 1
 
-IMPORTANT NOTE: if you use the latest version of ANGSD (>0.800), then, in order for these commands to work, you need to convert the .saf file format into the old one, using `ANGSD realSFS print` tool, as:
-
-	$ANGSD/misc/realSFS print pop1.saf.idx -oldout 1 > pop1.saf
+As a side note, to convert files from latest versions of ANGSD (>0.800) to older versions, you can to convert .saf files using `ANGSD realSFS print` tool, as `$ANGSD/misc/realSFS print pop1.saf.idx -oldout 1 > pop1.saf`. Please note that ngsTools has anyway full compatibility only with ANGSD <0.800.
 
 In case you analyse more than one population, you first need to get the subset of overlapping sites, stored in the file `intersect.txt`.
 
 	gunzip -c test.pop1.angsd.saf.pos.gz test.pop2.angsd.saf.pos.gz | sort -S 50% | uniq -d | sort -k1,1 -S 50% | gzip > tmp.gz
 	gunzip -c tmp.gz test.pops.angsd.saf.pos.gz | sort -S 50% | uniq -d | sort -k1,1 -S 50% > intersect.txt
-        rm tmp* test.pop?.angsd.*
+	rm tmp* test.pop?.angsd.*
 
 	$ANGSD/angsd sites index intersect.txt
 	N_SITES=`wc -l intersect.txt | cut -f 1 -d " "`
@@ -100,10 +107,10 @@ We then estimate the 2D-SFS to be used as prior.
 	N_SITES=`wc -l intersect.txt | cut -f 1 -d " "`
 	$NGSTOOLS/ngsPopGen/ngs2dSFS -postfiles test.pop1.saf test.pop2.saf -outfile test.pops.2dsfs -nind 5 5 -nsites $N_SITES
 
-Please note that ANGSD can also estimate it (using a Maximum Likelihood approach). You then need to convert its output to be read by ngsTools.
+Please note that ANGSD can also estimate it (using a Maximum Likelihood approach). You then need to convert its output to be read by ngsTools.Again, please note that more recent versions of ANGSD produce a different output for the 2D-SFS so the commands below will not work.
 
-	#$ANGSD/misc/realSFS 2dsfs test.pop1.saf test.pop2.saf 10 10 > test.pops.angsd.log.2dsfs
-        #Rscript convertSFS.R test.pops.log.2dsfs > test.pops.angsd.2dsfs
+	# $ANGSD/misc/realSFS 2dsfs test.pop1.saf test.pop2.saf 10 10 > test.pops.angsd.log.2dsfs
+	# Rscript convertSFS.R test.pops.log.2dsfs > test.pops.angsd.2dsfs
 
 We can now calculate per-site FST values.
 
@@ -122,7 +129,7 @@ Nucleotide diversity
 We compute the sample allele frequency probabilities (.saf files) using ANGSD only for the overlapping filtered sites.
 
 	$ANGSD/angsd -b bam.pop1.filelist -anc chimpHg19.fa -out test.pop1 -P 5 -r 1: -GL 1 -doSaf 1 -sites intersect.txt
-        $ANGSD/angsd -b bam.pop2.filelist -anc chimpHg19.fa -out test.pop2 -P 5 -r 1: -GL 1 -doSaf 1 -sites intersect.txt
+	$ANGSD/angsd -b bam.pop2.filelist -anc chimpHg19.fa -out test.pop2 -P 5 -r 1: -GL 1 -doSaf 1 -sites intersect.txt
 
 We estimate the marginal SFS to be used as priors.
 
@@ -171,7 +178,7 @@ This script will calculate principal components and plot them.
 Genetic distances
 ---------------
 
-We first calculate genotype posterior probabilities, assuming HWE, using ANGSD.
+We first calculate genotype posterior probabilities, assuming HWE, using ANGSD. Please note that ngsDist is compatible with the most recent versions of ANGSD unlike ngsTools.
 
 	$ANGSD/angsd -b bam.filelist -anc chimpHg19.fa -sites intersect.txt -r 1: -out test.pops -doMajorMinor 1 -doPost 1 -doMaf 1 -doGeno 8 -GL 1 -minMaf 0.05
 
@@ -181,11 +188,12 @@ We first calculate genotype posterior probabilities, assuming HWE, using ANGSD.
 We can now estimate pairwise genetic distances.
 Here we perform 100 bootstraps, each one with size of 5 sites (these are variable sites since we filtered out non-variable sites).
 
-        $NGSDIST/ngsDist -verbose 0 -geno test.pops.geno.gz -probs -n_ind 10 -n_sites $N_SITES -labels pops.label -out_prefix test.pops -n_threads 10 -n_boot_rep 100 -boot_block_size 5
+	$NGSDIST/ngsDist -verbose 0 -geno test.pops.geno.gz -probs -n_ind 10 -n_sites $N_SITES -labels pops.label -o test.pops.dist -n_threads 10 -n_boot_rep 100 -boot_block_size 5
 
-In case you are interested in producing trees out of these distances, you can used FastME.
+In case you are interested in producing trees out of these distances, you can used [FastME](http://www.atgc-montpellier.fr/fastme/).
 
-	$NGSDIST/FastME/fastme_linux64 -d 101 -i test.pops.dist -o test.pops.tree -m b -n b
+	FASTME=~/fastme-2.1.4/src/fastme # set your correct path
+	$FASTME -D 101 -i test.pops.dist -o test.pops.tree -m b -n b
 
 These scripts will produce a plot of the estimated tree.
 
