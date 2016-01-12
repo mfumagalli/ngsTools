@@ -19,6 +19,7 @@ If you are using a more recent version of ANGSD (very likely), here some suggest
 * ANGSD can now estimate [FST](http://popgen.dk/angsd/index.php/Fst) and [nucleotide diversity](http://popgen.dk/angsd/index.php/Tajima) and we recommend to use these implementations instead of ngsTools. ANGSD has a better implementation to automatically get the overlapping sites between populations.
 * Population structure can be investigated via Multi Dimensional Scaling (MDS) from a matrix of genetic distances, which can be estimated with ngsDist (compatible with the most recent version of ANGSD)
 * For PCA only, we recommend to use ngsTools with an older version of ANGSD <0.800 to be sure to have full compatibility
+* You may find [ANGSD-wrapper](https://github.com/arundurvasula/angsd-wrapper) useful to run ANGSD and ngsTools more easily
 
 Settings
 ----------
