@@ -13,3 +13,6 @@
 [submodule "angsd"]
 	path = angsd
 	url = https://github.com/ANGSD/angsd.git
+[submodule "htslib"]
+	path = htslib
+	url = https://github.com/samtools/htslib.git

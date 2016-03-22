@@ -1,14 +1,15 @@
 
-TOOLS = ngsSim angsd ngsF ngsPopGen ngsUtils
+EXT = htslib angsd
+TOOLS = ngsSim ngsPopGen ngsUtils ngsDist ngsF
 
-all: $(TOOLS)
+all: $(EXT) $(TOOLS)
 
-.PHONY: $(TOOLS)
-$(TOOLS):
-	$(MAKE) -C $@;
+.PHONY: $(EXT) $(TOOLS)
+$(EXT) $(TOOLS):
+	@$(MAKE) -C $@ HTSSRC=../htslib/;
 
 test:
 	@for i in $(TOOLS); do $(MAKE) -C $$i test; done
 
 clean:
-	@for i in $(TOOLS); do $(MAKE) -C $$i clean; done
+	@for i in $(EXT) $(TOOLS); do $(MAKE) -C $$i clean; done
