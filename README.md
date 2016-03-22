@@ -23,10 +23,8 @@ NOTE - this repository is intended for general use as it groups together the lat
 * [ngsUtils](https://github.com/mfumagalli/ngsUtils) - General tools to manipulate data.
  * __GetMergedGeno__ - Merge genotype posterior probabilities files
  * __GetSubGeno__ - Select a subset of genotype posterior probabilities files
- * __GetSubSfs__ - Select a subset of sample allele frequency posterior probabilities files
  * __GetSubSim__ - Select a subset of simulated data files
  * __GetSwitchedGeno__ - Switch major/minor in genotype posterior probabilities files
- * __GetSwitchedSfs__ - Switch major/minor in sample allele frequency posterior probabilities files
 
 * [ngsDist](https://github.com/fgvieira/ngsDist) is a program that estimates genetic distances for phylogenetic analyses from genotype posterior probabilities. It is not yet officially included in ngsTools, and therefore must be installed separately.
 
