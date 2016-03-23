@@ -1,0 +1,6 @@
+1.0.0 / 23-03-2016
+==================
+  * Added support for ANGSD's new SAF format
+  * Updated all sub-repositories
+  * Added htslib (ANGSD dependency)
+  * Added ngsDist to ngsTools
