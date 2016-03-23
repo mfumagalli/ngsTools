@@ -10,7 +10,9 @@ NOTE - this repository is intended for general use as it groups together the lat
 
 ##Packages
 
-*  [ngsSim](https://github.com/mfumagalli/ngsSim) - Simple sequencing read simulator that can generate data for multiple populations with variable levels of depth, error rates, genetic variability, and individual inbreeding ([Kim et al., 2011](http://www.ncbi.nlm.nih.gov/pubmed/21663684)). It generates mapped reads and the corresponding genotype likelihoods, avoiding mapping uncertainty and being extremely fast.
+* [ANGSD](https://github.com/ANGSD/angsd) - Software for analyzing next generation sequencing data taking genotype uncertainty into account by working with genotype probabilities (instead of called genotypes). This is especially useful for low and medium depth data ([Korneliussen et al., 2014](https://www.ncbi.nlm.nih.gov/pubmed/25420514)). **NOTE**: this program is **NOT** developed by `ngsTools` so, if you have any questions about it or encounter any errors/bugs, please check its [wiki](http://www.popgen.dk/wiki/index.php/ANGSD) or contact its authors.
+
+* [ngsSim](https://github.com/mfumagalli/ngsSim) - Simple sequencing read simulator that can generate data for multiple populations with variable levels of depth, error rates, genetic variability, and individual inbreeding ([Kim et al., 2011](http://www.ncbi.nlm.nih.gov/pubmed/21663684)). It generates mapped reads and the corresponding genotype likelihoods, avoiding mapping uncertainty and being extremely fast.
 
 * [ngsF](https://github.com/fgvieira/ngsF) - This program provides a method to estimate individual inbreeding coefficients using an EM algorithm ([Vieira et al., 2013](http://www.ncbi.nlm.nih.gov/pubmed/23950147)). These can provide insight into a population's mating system or demographic history and, more importantly, they can be used as a prior in ANGSD.
 
