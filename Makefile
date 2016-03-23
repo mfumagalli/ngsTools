@@ -2,6 +2,7 @@
 EXT = htslib angsd
 TOOLS = ngsSim ngsPopGen ngsUtils ngsDist ngsF
 
+
 all: $(EXT) $(TOOLS)
 
 .PHONY: $(EXT) $(TOOLS)

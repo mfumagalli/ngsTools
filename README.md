@@ -26,7 +26,7 @@ NOTE - this repository is intended for general use as it groups together the lat
  * __GetSubSim__ - Select a subset of simulated data files
  * __GetSwitchedGeno__ - Switch major/minor in genotype posterior probabilities files
 
-* [ngsDist](https://github.com/fgvieira/ngsDist) is a program that estimates genetic distances for phylogenetic analyses from genotype posterior probabilities. It is not yet officially included in ngsTools, and therefore must be installed separately.
+* [ngsDist](https://github.com/fgvieira/ngsDist) is a program that estimates genetic distances for phylogenetic analyses from genotype posterior probabilities ([Vieira et al., 2016](http://onlinelibrary.wiley.com/doi/10.1111/bij.12511/abstract))  . It is not officially included in ngsTools, and therefore must be installed separately.
 
 ## Installation
 
@@ -51,7 +51,7 @@ Executables are built into each tool directory in the repository. If you wish to
 
     % make clean
 
-NOTE: We now provide a direct link to ANGSD's repository on github. We anyway recommend users to refer to its official website [here](http://popgen.dk/wiki/index.php/ANGSD) to ensure that the latest version is in use.
+NOTE: We now provide a direct link to [ANGSD](http://popgen.dk/wiki/index.php/ANGSD) repository on github. However, please be aware that ngsTools is compatible only with versions of ANGSD <0.800 and not with more recent ones. 
 
 To get the latest version of ngsTools package:
 
@@ -71,7 +71,7 @@ NOTE for developers: if you wish to make changes and update the whole package:
 
 ## Input Files
 
-All programs receive as input files produced by ANGSD. In general, these files can contain genotype likelihoods, genotype posterior probabilities, sample allele frequency posterior probabilities or an estimate of the SFS (Site Frequency Spectrum). Please refer to each tool's repository for more explanations and examples on how these tools work.
+All programs receive as input files produced by ANGSD (<0.800). In general, these files can contain genotype likelihoods, genotype posterior probabilities, sample allele frequency posterior probabilities or an estimate of the SFS (Site Frequency Spectrum). Please refer to each tool's repository for more explanations and examples on how these tools work.
 
 ## INFO
 
@@ -136,6 +136,13 @@ Nucleotide diversity estimates from NGS data implemented here have been proposed
 	Assessing the effect of sequencing depth and sample size in population genetics inferences.
 	Fumagalli M.
 	PLoS One. 2013 Nov 18;8(11):e79667. doi: 10.1371/journal.pone.0079667.
+
+Estimation of genetic distances have been described here:
+
+	Improving the estimation of genetic distances from Next-Generation Sequencing data.
+	Vieira FG, Lassalle F, Korneliussen TS, Fumagalli M.
+	Biological Journal of the Linnean Society. Special Issue: Collections-Based Research in the Genomic Era. Volume 117, Issue 1, pages 139–149, January 2016. Article first published online: 30 MAR 2015.
+
 
 
 
