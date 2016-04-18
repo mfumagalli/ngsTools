@@ -5,57 +5,62 @@ A short tutorial for some basic analyses using ngsTools
 Please be sure you are using the most updated version of ngsTools. In doubt please run: 
 
     git pull
+    git submodule update
     make clean
     make
 	
 inside the ngsTools directory.
 
-
 Compatibility issues with ANGSD
 ---------------
 
-IMPORTANT NOTE: please note that ngsTools is compatible only with versions of ANGSD <0.800.
-If you are using a more recent version of ANGSD (very likely), here some suggestions:
-* ANGSD can now estimate [FST](http://popgen.dk/angsd/index.php/Fst) and [nucleotide diversity](http://popgen.dk/angsd/index.php/Tajima) and we recommend to use these implementations instead of ngsTools. ANGSD has a better implementation to automatically get the overlapping sites between populations.
-* Population structure can be investigated via Multi Dimensional Scaling (MDS) from a matrix of genetic distances, which can be estimated with ngsDist (compatible with the most recent version of ANGSD)
-* For PCA only, we recommend to use ngsTools with an older version of ANGSD <0.800 to be sure to have full compatibility
-* You may find [ANGSD-wrapper](https://github.com/arundurvasula/angsd-wrapper) useful to run ANGSD and ngsTools more easily
+We are currently working on updating ngsTools with the latest version of ANGSD! 
+Check back soon or subscribe to our google mailing list.
 
 Settings
 ----------
 
-Set directories to installed programs:
+Set directories to installed programs depending on where you installed them:
 
-    NGSTOOLS=~/ngsTools
+    NGSTOOLS=/data/Software/ngsTools
+    # for stressing the fact that ANGSD is a separate tool
     ANGSD=$NGSTOOLS/angsd
-    NGSDIST=$NGSTOOLS/ngsDist
-    SAMTOOLS=samtools
-    FASTME=~/fastme-2.1.4/binaries
+    # for indexing we are using SAMtools
+    SAMTOOLS=/data/data/Software/samtools-1.3/samtools
+    # for plotting trees we are using [FastMe](http://www.atgc-montpellier.fr/fastme/)
+    FASTME=/data/data/Software/fastme-2.1.4/binaries
+
 
 Data
 ----------
 
-Dowload example datasets (taken from ANGSD website) of 10 individuals.
-Index BAM and fasta files.
-Create a subset of 5 individuals into 2 populations.
+Download the example dataset.
+This is taken from ANGSD website and it consists of 10 individuals.
+We will also split this sample into 2 subsets for 5 individuals each.
 
+    # download and index BAM files 
     wget http://popgen.dk/software/download/angsd/bams.tar.gz
     tar -xvf bams.tar.gz
-
     for i in bams/*.bam; do $SAMTOOLS index $i; done
 
+    # create lists with BAM files
     ls bams/*.bam > bam.filelist
-
     ls bams/*.bam | head -n 5 > bam.pop1.filelist
     ls bams/*.bam | tail -n 5 > bam.pop2.filelist
 
+    # download and index the ancestral sequence
     wget wget http://dna.ku.dk/~thorfinn/hg19ancNoChr.fa.gz
     zcat hg19ancNoChr.fa.gz > chimpHg19.fa
-
     $SAMTOOLS faidx chimpHg19.fa
 
-As a note for the general use, in case an ancestral sequence is not available, analyses on FST, PCA, nucleotide diversity (but not number of fixed differences) can be carried out using the reference sequence to polarise your data. Please be aware that, under this scenario, some quantities (e.g. the unfolded joint site frequency spectrum) will be nonsense.
+    # download and index the reference sequence
+    wget http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz
+    gunzip hs37d5.fa.gz
+    $SAMTOOLS faidx hs37d5.fa
+    
 
+As a note for the general use, in case an ancestral sequence is not available, analyses on FST, PCA, nucleotide diversity (but not the number of fixed differences) can be carried out using the reference sequence to polarise your data. 
+Please be aware that, under this scenario, some quantities (e.g. the unfolded joint site frequency spectrum) will be nonsense.
 
 Filtering using ANGSD
 ----------------------
