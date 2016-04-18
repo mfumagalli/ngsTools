@@ -53,8 +53,6 @@ Executables are built into each tool directory in the repository. If you wish to
 
     % make clean
 
-NOTE: We now provide a direct link to [ANGSD](http://popgen.dk/wiki/index.php/ANGSD) repository on github. However, please be aware that ngsTools is compatible only with versions of ANGSD <0.800 and not with more recent ones. 
-
 To get the latest version of ngsTools package:
 
     % git pull
@@ -73,14 +71,14 @@ NOTE for developers: if you wish to make changes and update the whole package:
 
 ## Input Files
 
-All programs receive as input files produced by ANGSD (<0.800). In general, these files can contain genotype likelihoods, genotype posterior probabilities, sample allele frequency posterior probabilities or an estimate of the SFS (Site Frequency Spectrum). Please refer to each tool's repository for more explanations and examples on how these tools work.
+All programs receive as input files produced by ANGSD. In general, these files can contain genotype likelihoods, genotype posterior probabilities, sample allele frequency posterior probabilities or an estimate of the SFS (Site Frequency Spectrum). Please refer to each tool's repository for more explanations and examples on how these tools work.
 
 ## INFO
 
 # Tutorial
 
 A short tutorial on how some basic analyses using ngsTools from BAM files can be found [here](https://github.com/mfumagalli/ngsTools/blob/master/TUTORIAL.md).
-For most cases, here you will find all the information you need.
+For most cases, you will find all the information you need here.
 
 # Authors
 
