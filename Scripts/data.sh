@@ -24,7 +24,7 @@ do
 
 	for i in $INDS;
 	do
-		grep $i $1 >> tmp
+		grep $i phase3_bamlist.txt >> tmp
 	done
 	head -n $NS tmp > $OUTPUT
 	rm tmp
