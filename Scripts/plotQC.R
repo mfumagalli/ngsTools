@@ -1,4 +1,6 @@
 
+# quick script to compute percentiles and plot distributions of quality scores and depths
+
 fin=commandArgs(T)
 
 cat("", file=paste(fin,".info",sep="",collapse=""))
@@ -24,7 +26,9 @@ depp=matrix(NA, nrow=nrow(deps), ncol=ncol(deps))
 for (i in 1:nrow(depp)) {
 depp[i,]=apply(X=deps[i,], FUN=sum, MAR=2)
 }
-xl=30
+
+# this will plot only the first 'xl' bins of depth
+xl=10
 barplot(depp[,1:xl], names.arg=c(seq(1,ncol(deps))-1)[1:xl], xlab="Sample Depth", ylab="Counts", beside=T)
 
 dev.off()

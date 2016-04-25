@@ -7,9 +7,11 @@
 SAMTOOLS=samtools
 WGET=wget
 GUNZIP=gunzip
+BGZIP=bgzip
 echo Is this your path to samtools? $SAMTOOLS
 echo Is this your path to wget? $WGET
 echo Is this your path to gunzip? $GUNZIP
+echo Is this your path to bgzip? $BGZIP
 
 echo Retrieving file names...
 NS=20 # first 20 samples
@@ -57,20 +59,23 @@ ls Data/PEL.BAMs/*.bam > PEL.bamlist
 # download ancestral sequence
 echo Downloading and processing ancestral sequence...
 $WGET http://dna.ku.dk/~thorfinn/hg19ancNoChr.fa.gz &>/dev/null
-$GUNZIP hg19ancNoChr.fa.gz &>/dev/null
-$SAMTOOLS faidx hg19ancNoChr.fa
-mv hg19ancNoChr.* Data/.
+mv hg19ancNoChr.fa.gz anc.fa.gz
+$SAMTOOLS faidx anc.fa.gz
+mv anc.fa* Data/.
 
 # download reference sequence
 echo Downloading and processing reference sequence...
 $WGET http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz &>/dev/null
-$GUNZIP hs37d5.fa.gz &>/dev/null
-$SAMTOOLS faidx hs37d5.fa
-mv hs37d5.* Data/.
+$GUNZIP -c hs37d5.fa.gz > ref.fa 2>/dev/null
+rm hs37d5.fa.gz
+echo ... be patient...
+$BGZIP ref.fa
+$SAMTOOLS faidx ref.fa.gz
+mv ref.fa* Data/.
 
 echo Done!
 ls -lh Data/* > Data/download.log
-echo Open Data/download.log to see what files have been generated.
+echo Open Data/download.log to see which files have been generated.
 
 exit
 
