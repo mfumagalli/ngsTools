@@ -15,7 +15,7 @@ echo Is this your path to bgzip? $BGZIP
 
 echo Retrieving file names...
 NS=20 # first 20 samples
-for POP in LWK TSI CHB PEL;
+for POP in LWK TSI PEL;
 do
 
 	INPUT=$POP.txt
@@ -33,7 +33,7 @@ do
 done
 
 echo Downloading BAM files...
-for POP in LWK TSI CHB PEL;
+for POP in LWK TSI PEL;
 do
 	mkdir Data/$POP.BAMs
 	echo $POP
@@ -42,18 +42,16 @@ do
 	do
 		NAME=`echo -n $i | tail -c 58`
 		echo $NAME
-		$SAMTOOLS view -s 0.25 -h ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/phase3/$i 11:61000000-62000000 > Data/$POP.BAMs$NAME 2> /dev/null
+		$SAMTOOLS view -s 0.5 -h ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/phase3/$i 11:61000000-62000000 > Data/$POP.BAMs$NAME 2> /dev/null
 	done
 done
 rm *.bai
-# this has created files and folders in Data/PEL.BAMs/* and TSI and LWK and CHB
+# this has created files and folders in Data/PEL.BAMs/* and TSI and LWK
 
 # create file with list of BAMs
-ls Data/LWK.BAMs/*.bam Data/TSI.BAMs/*.bam Data/CHB.BAMs/*.bam Data/PEL.BAMs/*.bam > ALL.bamlist
-ls Data/LWK.BAMs/*.bam Data/TSI.BAMs/*.bam Data/PEL.BAMs/*.bam > ALL_noCHB.bamlist
+ls Data/LWK.BAMs/*.bam Data/TSI.BAMs/*.bam Data/PEL.BAMs/*.bam > ALL.bamlist
 ls Data/LWK.BAMs/*.bam > LWK.bamlist
 ls Data/TSI.BAMs/*.bam > TSI.bamlist
-ls Data/CHB.BAMs/*.bam > CHB.bamlist
 ls Data/PEL.BAMs/*.bam > PEL.bamlist
 
 # download ancestral sequence

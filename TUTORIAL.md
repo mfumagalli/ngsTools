@@ -45,21 +45,21 @@ Second, create all directories where you will be working:
 Data
 ----------
 
-As an illustration, we will use 80 BAM files of human samples (of African, European, East Asian, and Native American descent), a reference genome, and a putative ancestral sequence.
-BAM files have been downsampled to a mean depth of around 2X.
+As an illustration, we will use 60 BAM files of human samples (of African, European, and Native American descent), a reference genome, and a putative ancestral sequence.
+BAM files have been downsampled to a mean depth of around 4X.
 The human data represents a small genomic region (1MB on chromosome 11) extracted from the 1000 Genomes Project data set.
 More information on this project can be found [here](http://www.1000genomes.org/), including their last publication available [here](http://www.nature.com/nature/journal/v526/n7571/full/nature15393.html).
 All data is publicly available.
 
 A pipeline to retrieve such data is provided [here](https://github.com/mfumagalli/Weggis/blob/master/Files/data.sh).
 You need to have 'samtools' (tested with version 1.3.1), 'bgzip' (tested with version 1.2.1-69-gb79f40a), 'gunzip' and 'wget' installed in your /usr/bin to run this.
-Otherwise edit the first line of 'data.sh' file to set the appropriate paths.
+Otherwise edit the first line of 'Scripts/data.sh' file to set the appropriate paths.
 ```
     cp $NGSTOOLS/Files/* .
     bash $NGSTOOLS/Scripts/data.sh
 ```
 
-Now we have 80 BAM files at low depth, a reference and an ancestral sequence in FASTA format.
+Now we have 60 BAM files at low depth, a reference and an ancestral sequence in FASTA format.
 ```
 	cat Data/download.log
 ```
