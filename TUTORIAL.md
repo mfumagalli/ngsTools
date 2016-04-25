@@ -1,5 +1,5 @@
 
-A short tutorial for some basic analyses using ngsTools
+A short tutorial for some basic analyses using ngsTools (plus ANGSD and NGSadmix)
 ===============
 
 Please be sure you are using the most updated version of ngsTools. In doubt please run: 
@@ -20,47 +20,48 @@ Check back soon or subscribe to our google mailing list.
 Settings
 ----------
 
-Set directories to installed programs depending on where you installed them:
+In this tutorial we will be using several programs including ngsTools, ANGSD and NGSadmix to perform population genetics analyses from low-depth sequencing data.
+Please note that [ANGSD](http://popgen.dk/angsd/index.php/Main_Page#Overview) and [NGSadmix](http://www.popgen.dk/software/index.php/NgsAdmix) have not been developed by us and therefore questions on these tools should be addressed to their Authors.
+However, given the utility of such tools, we felt the need to include them to present a more comprehensive view on the application of this probabilistic approach to process NGS data in population genetics.
+Finally, we are using [SAMtools](http://samtools.sourceforge.net/) for indexing files, [FastMe](http://www.atgc-montpellier.fr/fastme/) for plotting trees and [R](https://www.r-project.org/) for manipulating and plotting results. This tutorial has been tested with SAMtools version 1.3.1, FastME version 2.1.4, R version 3.2.5.
+
+First, set directories to all required programs depending on where you installed them:
 
     NGSTOOLS=/data/Software/ngsTools
-    # for stressing the fact that ANGSD is a separate tool
     ANGSD=$NGSTOOLS/angsd
-    # for indexing we are using SAMtools
+    NGSADMIX=/data/data/Software/NGSadmix/NGSadmix
+
     SAMTOOLS=/data/data/Software/samtools-1.3/samtools
-    # for plotting trees we are using [FastMe](http://www.atgc-montpellier.fr/fastme/)
     FASTME=/data/data/Software/fastme-2.1.4/binaries
 
+Second, create all directories where you will be working:
+
+    mkdir Tutorial
+    cd Tutorial
+    mkdir Data
+    mkdir Results
 
 Data
 ----------
 
-Download the example dataset.
-This is taken from ANGSD website and it consists of 10 individuals.
-We will also split this sample into 2 subsets for 5 individuals each.
+As an illustration, we will use 80 BAM files of human samples (of African, European, East Asian, and Native American descent), a reference genome, and a putative ancestral sequence.
+BAM files have been downsampled to a mean depth of around 2X.
+The human data represents a small genomic region (1MB on chromosome 11) extracted from the 1000 Genomes Project data set.
+More information on this project can be found [here](http://www.1000genomes.org/), including their last publication available [here](http://www.nature.com/nature/journal/v526/n7571/full/nature15393.html).
+All data is publicly available.
 
-    # download and index BAM files 
-    wget http://popgen.dk/software/download/angsd/bams.tar.gz
-    tar -xvf bams.tar.gz
-    for i in bams/*.bam; do $SAMTOOLS index $i; done
+A pipeline to retrieve such data is provided [here](https://github.com/mfumagalli/Weggis/blob/master/Files/data.sh).
+You need to have 'samtools' (tested with version 1.3.1), 'gunzip' and 'wget' installed in your /usr/bin to run this.
+Otherwise edit the first line of 'data.sh' file to set the appropriate paths.
 
-    # create lists with BAM files
-    ls bams/*.bam > bam.filelist
-    ls bams/*.bam | head -n 5 > bam.pop1.filelist
-    ls bams/*.bam | tail -n 5 > bam.pop2.filelist
-
-    # download and index the ancestral sequence
-    wget wget http://dna.ku.dk/~thorfinn/hg19ancNoChr.fa.gz
-    zcat hg19ancNoChr.fa.gz > chimpHg19.fa
-    $SAMTOOLS faidx chimpHg19.fa
-
-    # download and index the reference sequence
-    wget http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz
-    gunzip hs37d5.fa.gz
-    $SAMTOOLS faidx hs37d5.fa
-    
+    cp $NGSTOOLS/Files/* .
+    bash $NGSTOOLS/Scripts/data.sh phase3_bamlist.txt
 
 As a note for the general use, in case an ancestral sequence is not available, analyses on FST, PCA, nucleotide diversity (but not the number of fixed differences) can be carried out using the reference sequence to polarise your data. 
 Please be aware that, under this scenario, some quantities (e.g. the unfolded joint site frequency spectrum) will be nonsense.
+
+
+
 
 Filtering using ANGSD
 ----------------------
