@@ -71,16 +71,17 @@ and the list with BAM files has been written to 'ALL.bamlist'.
 As a note for the general use, in case an ancestral sequence is not available, analyses on FST, PCA, nucleotide diversity (but not the number of fixed differences) can be carried out using the reference sequence to polarise your data. 
 Please be aware that, under this scenario, some quantities (e.g. the unfolded joint site frequency spectrum) will be nonsense.
 
+Please note that, since we are randomly subsampling reads here, your results in this tutorial may (slightly) differ from what written here. 
 
 Basic filtering using ANGSD
 ----------------------
 
-Here we will use ANGSD to analyse our data. 
-To see a full list of options type
+Here we will use ANGSD to analyse our data, for filtering and for generating files as input for ngsTools.
+To see a full list of options in ANGSD type:
 ```
 $ANGSD/angsd
 ```
-and you should see something like
+and you should see something like:
 ```
 ...
 Overview of methods:
@@ -179,11 +180,13 @@ We are now printing the distribution of quality scores and per-site depths (glob
 ```
 $ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL.qc \
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+	-minMapQ 20 \
         -doQsDist 1 -doDepth 1 -doCounts 1 -maxDepth 1000 &> /dev/null
 ```
 As input we give the list of BAM files with option `-b` and then specify the references sequence with `-ref` and the prefix for output files with `-out`.
-Additionally, ```-C 50``` reduces the effect of reads with excessive mismatches, while ```-baq 1``` computes base alignment quality as explained here ([BAQ](http://samtools.sourceforge.net/mpileup.shtml)) used to rule out false SNPs close to INDELS, and ```-trim 0``` means that we are not trimming the ends of reads.
-Finally, ```-maxDepth 1000``` means that all sites with depth equal or greater than 1200 will be binned together, and ```-P 4``` means that I am using 4 threads.
+Additionally, ```-C 50``` reduces the effect of reads with excessive mismatches, while ```-baq 1``` computes base alignment quality as explained here ([BAQ](http://samtools.sourceforge.net/mpileup.shtml)) to rule out false SNPs close to INDELS, and ```-trim 0``` means that we are not trimming the ends of reads.
+With ```-minMapQ 20``` we filter out reads with low mapping quality.
+Finally, ```-maxDepth 1000``` means that all sites with depth equal or greater than 1000 will be binned together, and ```-P 4``` means that I am using 4 threads.
 
 You can have a look at the files generated:
 ```
@@ -192,6 +195,7 @@ ls Results/*
 Results/ALL.qc.arg  Results/ALL.qc.depthGlobal  Results/ALL.qc.depthSample  Results/ALL.qc.qs
 ...
 ```
+and open them:
 ```
 # counts of quality scores
 less -S Results/ALL.qc.qs
