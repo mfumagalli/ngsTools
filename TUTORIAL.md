@@ -55,7 +55,7 @@ A pipeline to retrieve such data is provided [here](https://github.com/mfumagall
 You need to have 'samtools' (tested with version 1.3.1), 'bgzip' (tested with version 1.2.1-69-gb79f40a), 'gunzip' and 'wget' installed in your /usr/bin to run this.
 Otherwise edit the first line of 'Scripts/data.sh' file to set the appropriate paths.
 ```
-    cp $NGSTOOLS/Files/* .
+    cp $NGSTOOLS/Files/*.txt .
     bash $NGSTOOLS/Scripts/data.sh
 ```
 
