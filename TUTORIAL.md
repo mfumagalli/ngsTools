@@ -67,6 +67,7 @@ and the list with BAM files has been written to 'ALL.bamlist'.
 ```
 	cat ALL.bamlist
 ```
+Check that all your BAM files in 'Data/download.log' have been downloaded correctly (file size different than 0).
 
 As a note for the general use, in case an ancestral sequence is not available, analyses on FST, PCA, nucleotide diversity (but not the number of fixed differences) can be carried out using the reference sequence to polarise your data. 
 Please be aware that, under this scenario, some quantities (e.g. the unfolded joint site frequency spectrum) will be nonsense.
@@ -223,10 +224,10 @@ After inspecting these output files, a possible choice of parameters may be:
 Parameter | Meaning |
 --- | --- |
 -minMap 20 | minimum mapping quality of 20 |
--minQ 10 | minimum base quality of 10 |
--minInd 40 | use only sites with data from at least 40 individuals |
--setMinDepth 40 | minimum total depth |
--setMaxDepth 240 | maximum total depth |
+-minQ 20 | minimum base quality of 10 |
+-minInd 30 | use only sites with data from at least 30 individuals |
+-setMinDepth 60 | minimum total depth |
+-setMaxDepth 400 | maximum total depth |
 
 Please note that ANGSD can also compute more sophisticated metrics to filter out SNPs, as described [here](http://popgen.dk/angsd/index.php/SnpFilters), mostly based on:
 
@@ -371,7 +372,7 @@ Recalling also our choice for data filtering, our command line is:
 ```
 $ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL \
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
-        -minMapQ 20 -minQ 10 -minInd 40 -setMinDepth 40 -setMaxDepth 240 -doCounts 1 \
+        -minMapQ 20 -minQ 20 -minInd 30 -setMinDepth 60 -setMaxDepth 400 -doCounts 1 \
         -GL 1 -doMajorMinor 1 -doMaf 1 -skipTriallelic 1 \
         -SNP_pval 1e-3\
         -doGeno 32 -doPost 1 &> /dev/null
@@ -382,15 +383,14 @@ gunzip Results/ALL.geno.gz
 ```
 
 We are going to use `ngsCovar`, which estimates the covariance matrix between individuals based on genotype probabilities.
-Then this matrix will be decomposed into principal componenets which will be investigated for population structure analyses.
+Then this matrix will be decomposed into principal components which will be investigated for population structure analyses.
 Note that although `ngsCovar` can account for SNPs uncertanity, we find that it is faster to perform a light SNP filtering first (as we did using ```-SNP_pval 1e-3```) than using all sites.
 
-If you type
+If you type:
 ```
 $NGSTOOLS/ngsPopGen/ngsCovar
 ```
 you will see a list of possible options.
-
 For instance, we need to define how many sites we have.
 To retrieve such value, we can inspect the file with allele frequencies:
 ```
@@ -398,10 +398,11 @@ less -S Results/ALL.mafs.gz
 N_SITES=`zcat Results/ALL.mafs.gz | tail -n+2 | wc -l`
 echo $N_SITES
 ```
+In my case I have 4523 sites.
 
 Now we can perform a PCA by estimating the covariance matrix first:
 ```
-$NGSTOOLS/ngsPopGen/ngsCovar -probfile Results/ALL.geno -outfile Results/ALL.covar -nind 80 -nsites $N_SITES -call 0 -norm 0 &> /dev/null
+$NGSTOOLS/ngsPopGen/ngsCovar -probfile Results/ALL.geno -outfile Results/ALL.covar -nind 60 -nsites $N_SITES -call 0 -norm 0 &> /dev/null
 ```
 with the options `-call 0` meaning that we do not perform genotype calling and `-norm 0` that we are not normalising by allele frequency.
 The latter may give more weight to low frequency variants which are harder to estimate.
@@ -416,7 +417,7 @@ Note that this matrix is symmetric.
 Finally, we perform an eigenvector decomposition and plot the resulting map:
 ```
 # create a cluster-like file defining the labelling (population) for each sample
-Rscript -e 'write.table(cbind(seq(1,80),rep(1,80),c(rep("LWK",20),rep("TSI",20),rep("CHB",20),rep("PEL",20))), row.names=F, sep=" ", col.names=c("FID","IID","CLUSTER"), file="Results/ALL.clst", quote=F)'
+Rscript -e 'write.table(cbind(seq(1,60),rep(1,60),c(rep("LWK",20),rep("TSI",20),rep("PEL",20))), row.names=F, sep=" ", col.names=c("FID","IID","CLUSTER"), file="Results/ALL.clst", quote=F)'
 # run and plot
 Rscript $NGSTOOLS/Scripts/plotPCA.R -i Results/ALL.covar -c 1-2 -a Results/ALL.clst -o Results/ALL.pca.pdf
 evince Results/ALL.pca.pdf
@@ -434,13 +435,13 @@ Again, we run ANGSD to compute genotype psoterior probabilities assuming HWE and
 ```
 $ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL \
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
-        -minMapQ 20 -minQ 10 -minInd 40 -setMinDepth 40 -setMaxDepth 240 -doCounts 1 \
+        -minMapQ 20 -minQ 20 -minInd 30 -setMinDepth 60 -setMaxDepth 400 -doCounts 1 \
         -GL 1 -doMajorMinor 1 -doMaf 1 -skipTriallelic 1 \
         -SNP_pval 1e-3 \
         -doGeno 8 -doPost 1 &> /dev/null
 ```
 
-Record how many sites we retrieve.
+Record how many sites we retrieve (although this should be equal what found earlier):
 ```
 N_SITES=`zcat Results/ALL.mafs.gz | tail -n+2 | wc -l`
 echo $N_SITES
@@ -448,13 +449,13 @@ echo $N_SITES
 
 For plotting purposes, we now create a file with labels indicating the population of interest for each sample.
 ```
-Rscript -e 'cat(paste(rep(c("LWK","TSI","CHB","PEL"),each=20), rep(1:20, 4), sep="_"), sep="\n", file="Data/pops.label")'
+Rscript -e 'cat(paste(rep(c("LWK","TSI","PEL"),each=20), rep(1:20, 3), sep="_"), sep="\n", file="Data/pops.label")'
 cat Data/pops.label
 ```
 
 With [ngsDist](https://github.com/fgvieira/ngsDist) we can compute pairwise genetic distances without relying on individual genotype calls.
 ```
-$NGSTOOLS/ngsDist/ngsDist -verbose 1 -geno Results/ALL.geno.gz -probs -n_ind 80 -n_sites $N_SITES -labels Data/pops.label -o Results/ALL.dist -n_threads 4 &> /dev/null
+$NGSTOOLS/ngsDist/ngsDist -verbose 1 -geno Results/ALL.geno.gz -probs -n_ind 60 -n_sites $N_SITES -labels Data/pops.label -o Results/ALL.dist -n_threads 4 &> /dev/null
 less -S Results/ALL.dist
 ```
 
@@ -471,34 +472,70 @@ evince Results/ALL.tree.pdf
 
 From these distances, we can also perform a MDS analysis and investigate the population genetic structure of our samples.
 ```
-N_SAMPLES=80
+N_SAMPLES=60
 tail -n +3 Results/ALL.dist | head -n $N_SAMPLES | Rscript --vanilla --slave $NGSTOOLS/Scripts/getMDS.R --no_header --data_symm -n 4 -m "mds" -o Results/ALL.mds &> /dev/null
 less -S Results/ALL.mds
 ```
 The first line gives the proportion of explained variance by each component, and the other lines specify the coordinates of each sample on each component.
 
-OLD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-This is just a possible arbitrary filtering setting. Please refer to ANGSD website for more options. 
-In this scenario, we set a minimum mapping quality of 30 and base quality of 20. 
-We furthermore filter out sites where we have data for less than 6 individuals and a global depth less than 20 or greater than 100.
-We analyse only the first chromosome, using the `-r 1:` options.
-Options `-GL 1 -doSaf 1 -doMaf 1 -doMajorMinor 1` specify how we calculate genotype likelihoods, major and minor alleles, and allele frequencies.
-Finally, we performed a SNP calling by removing sites where the estimated minor allele frequency is less than 0.05 (equal to the frequency of singletons with 10 diploids).
-Despite all methods work even when all sites are considered, excluding sites which are clearly not variable can help reduce computational time, memory space, and prevent some numerical instabilities.
-We do this filtering for the whole sample as well as for both populations.
+## Admixture proportions
 
-    $ANGSD/angsd -b bam.pop1.filelist -anc chimpHg19.fa -remove_bads -unique_only -minMapQ 30 -minQ 20 -only_proper_pairs 1 -trim 0 -minInd 3 -out test.pop1.angsd -P 5 -setMinDepth 10 -setMaxDepth 50 -r 1: -GL 1 -doSaf 1
+Admixture proportions can be estimated from genotype likelihoods using [NGSadmix](http://popgen.dk/angsd/index.php/NGSadmix), which requires input files in BEAGLE format.
+This can be accomplished in ANGSD with the following command:
+```
+$ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL \
+        -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+        -minMapQ 20 -minQ 20 -minInd 30 -setMinDepth 60 -setMaxDepth 400 -doCounts 1 \
+        -GL 1 -doMajorMinor 4 -doMaf 1 -skipTriallelic 1 \
+	-doGlf 2 -SNP_pval 1e-6 &> /dev/null
+```
+Note that, as an illustration, here we use a more stringent cutoff for SNP calling and we impose of the the alleles to be the reference one.
 
-    $ANGSD/angsd -b bam.pop2.filelist -anc chimpHg19.fa -remove_bads -unique_only -minMapQ 30 -minQ 20 -only_proper_pairs 1 -trim 0 -minInd 3 -out test.pop2.angsd -P 5 -setMinDepth 10 -setMaxDepth 50 -r 1: -GL 1 -doSaf 1
+Assuming we want to test for 3 ancestral components, admixture proportions can be obtained with:
+```
+K=3
+$NGSADMIX -likes Results/ALL.beagle.gz -K $K -outfiles Results/ALL -P 4 -minMaf 0.01 -minInd 30 &> /dev/null
+```
+and results are stored in the following files 'Results/ALL.qopt' and 'Results/ALL.fopt.gz', the former containing the inferred proportions for each individual.
 
-As a side note, to convert files from latest versions of ANGSD (>0.800) to older versions, you can to convert .saf files using `ANGSD realSFS print` tool, as `$ANGSD/misc/realSFS print pop1.saf.idx -oldout 1 > pop1.saf`. Please note that ngsTools has anyway full compatibility only with ANGSD <0.800.
 
-In case you analyse more than one population, you first need to get the subset of overlapping sites, stored in the file `intersect.txt`.
+Inbreeding
+------------------------------------------
 
-    $ANGSD/misc/realSFS print test.pop1.angsd.saf.idx test.pop2.angsd.saf.idx | cut -f 1-2 > intersect.txt
-    $ANGSD/angsd sites index intersect.txt
-    N_SITES=`wc -l intersect.txt | cut -f 1 -d " "`
+For some of the previous analyses, we assumed that our populations were in HWE.
+If this is not the case, you may want to adjust the prior by including an estimate of the inbreeding coefficient.
+This can be achieved from genotype likelihoods using [ngsF](https://github.com/fgvieira/ngsF), part of ngsTools.
+
+First, again we need to calculate genotype likelihoods in a format accepted by ngsF.
+You also need to perform a SNP calling and ideally perform this analysis only on unlinked sites.
+This can be achieved (for instance) by randomly sampling sites at a given distance (not shown here).
+```
+$ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL \
+        -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+        -minMapQ 20 -minQ 20 -minInd 30 -setMinDepth 60 -setMaxDepth 400 -doCounts 1 \
+        -GL 1 -doMajorMinor 4 -doMaf 1 -skipTriallelic 1 \
+        -doGlf 3 -SNP_pval 1e-6 &> /dev/null
+```
+
+Inbreeding coefficients are calculated by first estimating reliable starting values and then performing a deep search, with the following commands:
+```
+N_SITES=`zcat Results/ALL.mafs.gz | tail -n+2 | wc -l`
+
+zcat Results/ALL.glf.gz | $NGSTOOLS/ngsF/ngsF --n_ind 60 --n_sites $N_SITES --glf - --min_epsilon 1e-6 --out Results/ALL.approx_indF --approx_EM --seed 0 --init_values u -max_iters 500 --verbose 0
+
+zcat Results/ALL.glf.gz | $NGSTOOLS/ngsF/ngsF --n_ind 60 --n_sites $N_SITES --glf - --min_epsilon 1e-9 --out Results/ALL.indF --seed 0 --init_values Results/ALL.approx_indF.pars -max_iters 1500 --verbose 0
+
+cat Results/ALL.indF
+```
+
+If the estimate inbreeding coefficients are different than 0, you may want to correct your prior on genotypes and allele frequencies accordingly.
+
+
+
+
+
+OLD..............
 
 
 Population genetic differentiation - FST
