@@ -837,7 +837,6 @@ Inspect the results.
 zcat Results/LWK.mafs.gz Results/TSI.mafs.gz Results/PEL.mafs.gz
 ```
 
-
 Summary statistics using ngsTools
 -----------------------------------
 
@@ -921,66 +920,64 @@ Note that, as an illustration, we also filter out sites with a probability of be
 
 ## Nucleotide diversity
 
-
-
-
-
-
-
-OLD..............
-
-
-Population genetic differentiation - FST
----------------
-
-We first need to compute sample allele frequencies likelihoods (stored in .saf files) using ANGSD, only for the overlapping filtered sites.
-
-    $ANGSD/angsd -b bam.pop1.filelist -anc chimpHg19.fa -out test.pop1 -P 5 -r 1: -GL 1 -doSaf 1 -sites intersect.txt
-    $ANGSD/angsd -b bam.pop2.filelist -anc chimpHg19.fa -out test.pop2 -P 5 -r 1: -GL 1 -doSaf 1 -sites intersect.txt
-
-We then estimate the 2D-SFS to be used as prior.
-
-    N_SITES=`wc -l intersect.txt | cut -f 1 -d " "`
-    zcat test.pop1.saf.gz > test.pop1.saf
-    zcat test.pop2.saf.gz > test.pop2.saf
-    $NGSTOOLS/ngsPopGen/ngs2dSFS -postfiles test.pop1.saf test.pop2.saf -outfile test.pops.2dsfs -nind 5 5 -nsites $N_SITES
-
-Please note that ANGSD can also estimate it (using a Maximum Likelihood approach).
-
-    $ANGSD/misc/realSFS test.pop1.saf.idx test.pop2.saf.idx > test.pops.realSFS.2dsfs
-    Rscript $NGSTOOLS/scripts/convertSFS.R test.pops.realSFS.2dsfs > test.pops.realSFS.2dsfs
-
-We can now calculate per-site FST values.
-
-    $NGSTOOLS/ngsPopGen/ngsFST -postfiles test.pop1.saf test.pop2.saf -priorfile test.pops.2dsfs -nind 5 5 -nsites $N_SITES -outfile test.pops.fst
-
-These example scripts will produce a plot and text file with sliding windows values.
-
-    Rscript $NGSTOOLS/scripts/plotFST.R -i test.pops.fst -o test.pops.fst -p intersect.txt -w 1 -s 1
-    less -S test.pops.fst.txt
-    evince test.pops.fst.pdf
-
-
-Nucleotide diversity
-----------------------------
-
 We use the sample allele frequency probabilities (.saf files) calculated on the previous step and estimate the marginal SFS to be used as priors.
-
-    $ANGSD/misc/realSFS -P 5 test.pop1.saf.idx > test.pop1.sfs
-    $ANGSD/misc/realSFS -P 5 test.pop2.saf.idx > test.pop2.sfs
+```
+for POP in LWK TSI PEL
+do
+	echo $POP
+	$ANGSD/misc/realSFS -P 4 Results/$POP.saf.idx -sites Data/intersect.txt > Results/$POP.sfs &> /dev/null
+done
+```
 
 From these priors, we calculate the sample allele frequency posterior probabilities for each population.
+```
+for POP in LWK TSI PEL
+do
+        echo $POP
+        $ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP \
+                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+                -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
+                -GL 1 -doSaf 1 -pest Results/$POP.sfs \
+                -sites Data/intersect.txt &> /dev/null
+done
+```
 
-    $ANGSD/angsd -bam bam.pop1.filelist -out test.pop1 -doSaf 1 -pest test.pop1.sfs -anc chimpHg19.fa -GL 1 -P 5 -r 1: -sites intersect.txt
-    $ANGSD/angsd -bam bam.pop2.filelist -out test.pop2 -doSaf 1 -pest test.pop2.sfs -anc chimpHg19.fa -GL 1 -P 5 -r 1: -sites intersect.txt
+Assuming we are interested in LWK and PEL, we can now calculate some summary statistics, namely number of segregating sites, expected heterozygosity, number of fixed differences and dxy.
+Please note that the latter 2 statistics have not been properly tested. For instance, dxy been shown to be over-estimated and should be used only for inspecting the distribution and not to make inferences based on its absolute values.
+```
+zcat Results/LWK.saf.gz > Results/LWK.saf
+zcat Results/PEL.saf.gz > Results/PEL.saf
+$NGSTOOLS/ngsPopGen/ngsStat -npop 2 -postfiles Results/LWK.saf Results/PEL.saf -nsites $N_SITES -nind 20 20 -outfile Results/LWK.PEL.stats.txt
+```
+whether if you are interested in only one population the command would be:
+```
+$NGSTOOLS/ngsPopGen/ngsStat -npop 1 -postfiles Results/PEL.saf -nsites $N_SITES -nind 20 -outfile Results/PEL.stats.txt
+```
 
-We can now calculate some summary statistics, namely number of segregating sites, expected heterozygosity, number of fixed differences and dxy (the latter has been shown to be over-estimated and should be used only for inspecting the distribution and not to make inferences based on its absolute values).
-
-    $NGSTOOLS/ngsPopGen/ngsStat -npop 2 -postfiles test.pop1.saf test.pop2.saf -nsites $N_SITES -nind 5 5 -outfile test.stat
+Have a look at the output files:
+```
+less -S Results/LWK.PEL.stats.txt
+less -S Results/PEL.stats.txt
+```
+The output file (for a 2-populations analysis) has the following header: position start, position end, segregating sites (pop 1), heterozygosity (pop 1), segregating sites (pop 2), heterozygosity (pop 2), fixed differences, dxy.
+If only 1 population is analysed, this is the header: position start, position end, segregating sites, heterozygosity.
 
 These example scripts will produce a plot and text file with sliding windows values, for 2 populations and only 1 population.
+```
+	Rscript $NGSTOOLS/Scripts/plotSS.R -i Results/LWK.PEL.stats.txt -p Data/intersect.txt -o Results/LWK.PEL.scan.stats -n LWK-PEL -w 50000 -s 10000
+	Rscript $NGSTOOLS/Scripts/plotSS.R -i Results/PEL.stats.txt -p Data/intersect.txt -o Results/PEL.scan.stats -n PEL -w 50000 -s 10000
+	less -S Results/LWK.PEL.scan.stats.txt
+	less -S Results/PEL.scan.stats.txt
+	evince Results/LWK.PEL.scan.stats.pdf
+	evince Results/PEL.scan.stats.pdf
+```
 
-    Rscript $NGSTOOLS/scripts/plotSS.R -i test.stat -p intersect.txt -o test.stat.pdf -n pop1-pop2 -w 5000 -s 1000
-    Rscript $NGSTOOLS/scripts/plotSS.R -i test.stat -p intersect.txt -o test.stat.pop1.pdf -n pop1 -w 5000 -s 1000
+
+Additional help
+-----------------------------
+
+Further information and more example can be found at the individual web page for [ANGSD](http://popgen.dk/wiki/index.php/ANGSD).
+Also, [ANGSD-wrapper](https://github.com/mojaveazure/angsd-wrapper) is a utility to run ANGSD and ngsTools developed by the [Ross-Ibarra Lab](http://www.rilab.org/) at UC Davis.
+Please contact [me](https://iris.ucl.ac.uk/iris/browse/profile?upi=MFUMA31) for questions and feedback on this tutorial.
 
 
