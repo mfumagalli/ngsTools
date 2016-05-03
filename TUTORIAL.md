@@ -36,9 +36,10 @@ Second, create all directories where you will be working:
     mkdir Results
 
 Our goal in this tutorial is to show how to go from BAM files to summary statistics using ngsTools/ANGSD.
-Namely we will see how to perform the following analyses:
+Namely we will cover the following topics:
 * basic data filtering
 * population structure (PCA, genetic distances, MDS, admixture proportions)
+* inbreeding coefficients
 * population genetic differentiation (FST/PBS)
 * nucleotide diversity
 

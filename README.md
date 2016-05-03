@@ -20,7 +20,7 @@ NOTE - this repository is intended for general use as it groups together the lat
  * __ngsFst__ - Quantifying population genetic differentiation
  * __ngsCovar__ - Population structure via PCA (principal components analysis)
  * __ngs2dSFS__ - Estimate 2D-SFS from posterior probabilities of sample allele frequencies
- * __ngsStat__ - Estimate number of segregating sites, expected average heterozygosity, and number of fixed differences (if data from 2 populations are provided).
+ * __ngsStat__ - Estimate number of segregating sites, expected average heterozygosity and other nucleotide diversity indexes
 
 * [ngsUtils](https://github.com/mfumagalli/ngsUtils) - General tools to manipulate data.
  * __GetMergedGeno__ - Merge genotype posterior probabilities files
@@ -28,7 +28,9 @@ NOTE - this repository is intended for general use as it groups together the lat
  * __GetSubSim__ - Select a subset of simulated data files
  * __GetSwitchedGeno__ - Switch major/minor in genotype posterior probabilities files
 
-* [ngsDist](https://github.com/fgvieira/ngsDist) is a program that estimates genetic distances for phylogenetic analyses from genotype posterior probabilities ([Vieira et al., 2016](http://onlinelibrary.wiley.com/doi/10.1111/bij.12511/abstract))  . It is not officially included in ngsTools, and therefore must be installed separately.
+* [ngsDist](https://github.com/fgvieira/ngsDist) is a program that estimates genetic distances for phylogenetic analyses from genotype posterior probabilities ([Vieira et al., 2016](http://onlinelibrary.wiley.com/doi/10.1111/bij.12511/abstract)).
+
+* [ngsF-HMM](https://github.com/fgvieira/ngsF-HMM) is a program developed and written by F.G. Vieira to estimate per-individual inbreeding tracts using a two-state Hidden Markov Model (Vieira et al. 2016 Bioinformatics). It uses a probabilistic framework that takes the uncertainty of genotype's assignation into account; making it specially suited for low-quality or low-coverage datasets. It is not officially part of ngsTools so it must be installed separately.
 
 ## Installation
 
@@ -71,13 +73,14 @@ NOTE for developers: if you wish to make changes and update the whole package:
 
 ## Input Files
 
-All programs receive as input files produced by ANGSD. In general, these files can contain genotype likelihoods, genotype posterior probabilities, sample allele frequency posterior probabilities or an estimate of the SFS (Site Frequency Spectrum). Please refer to each tool's repository for more explanations and examples on how these tools work.
+All programs receive as input files produced by ANGSD. In general, these files can contain genotype likelihoods, genotype posterior probabilities, sample allele frequency posterior probabilities or an estimate of the SFS (Site Frequency Spectrum). Please refer to each tool's repository or the [Tutorial](https://github.com/mfumagalli/ngsTools/blob/master/TUTORIAL.md) for more explanations and examples on how these tools work.
 
 ## INFO
 
 # Tutorial
 
-A short tutorial on how some basic analyses using ngsTools from BAM files can be found [here](https://github.com/mfumagalli/ngsTools/blob/master/TUTORIAL.md).
+A tutorial on some analyses using ngsTools/ANGSD from BAM files can be found [here](https://github.com/mfumagalli/ngsTools/blob/master/TUTORIAL.md).
+In this Tutorial, you will find how to filter your data, assess population structure and estimate summary statistics using these tools for low-depth data.
 For most cases, you will find all the information you need here.
 
 # Authors
@@ -95,10 +98,10 @@ For informal questions (not about ANGSD, only for ngsTools) feel free to contact
 
 ngsTools package can be cited as:
 
-    ngsTools: methods for population genetics analyses from next-generation sequencing data.
-    Fumagalli M, Vieira FG, Linderoth T, Nielsen R.
-    2014 May 15;30(10):1486-7. doi: 10.1093/bioinformatics/btu041. Epub 2014 Jan 23.
-    http://www.ncbi.nlm.nih.gov/pubmed/24458950
+	ngsTools: methods for population genetics analyses from next-generation sequencing data.
+	Fumagalli M, Vieira FG, Linderoth T, Nielsen R.
+	2014 May 15;30(10):1486-7. doi: 10.1093/bioinformatics/btu041. Epub 2014 Jan 23.
+	http://www.ncbi.nlm.nih.gov/pubmed/24458950
 
 ANGSD can be cited as:
 
