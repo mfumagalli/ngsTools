@@ -843,6 +843,7 @@ Summary statistics using ngsTools
 
 Most of the summary statistics can be now estimated using ANGSD using the commands described above.
 For the sake of completeness, here we show how we can perform similar analyses using ngsTools, although ANGSD may be faster and require less memory than ngsTools.
+Note that the methods behind how ANGSD and ngsTools estimate such quantities are very similar.
 
 ## Population genetic differentiation (FST)
 
@@ -890,6 +891,7 @@ We then estimate the 2D-SFS to be used as prior using ngsTools.
 The output is a matrix giving the proportion of sites with a given joint allele frequency.
 
 ngsTools implements a very simple estimator of the SFS, where the most likely joint allele frequency is recorded at each site.
+This tends to overestimate singletons, for instance.
 If you have enough sites, then it is recommended to use the 2D-SFS estimated in ANGSD instead.
 Recalling what previously shown, the command is (note that -sites option is kept for consistency but it is not really needed here):
 ```
@@ -899,6 +901,29 @@ You need to convert this file into the input file for ngsTools (note that you ne
 ```
 Rscript $NGSTOOLS/Scripts/convertSFS.R Results/TSI.PEL.sfs 20 20 > Results/TSI.PEL.angsd.2dsfs
 ```
+
+We can now calculate per-site FST values.
+```
+	$NGSTOOLS/ngsPopGen/ngsFST -postfiles Results/TSI.saf Results/PEL.saf -priorfile Results/TSI.PEL.angsd.2dsfs -nind 20 20 -nsites $N_SITES -outfile Results/TSI.PEL.fst
+```
+The output has the following header: a, (a+b), correcting factor, FST, probability of being variable.
+Note that FST is equal (ignoring the correcting factor) to a/(a+b), and multiple-sites estimates are sum(a)/sum(a+b).
+Also note that negative FST values mean FST equal to 0. 
+Very large negative values are simply due to numerical corrections and they tend to appear when a site is very unlikely to be variable.
+
+These example scripts will produce a plot and text file with sliding windows values (size of 50kbp, step of 10kbp).
+Note that, as an illustration, we also filter out sites with a probability of being variable less than 0.90.
+```
+    Rscript $NGSTOOLS/Scripts/plotFST.R -i Results/TSI.PEL.fst -o Results/TSI.PEL.scan.fst -p Data/intersect.txt -w 50000 -s 10000 -t 0.90
+    less -S Results/TSI.PEL.scan.fst.txt
+    evince Results/TSI.PEL.scan.fst.pdf
+```
+
+## Nucleotide diversity
+
+
+
+
 
 
 
