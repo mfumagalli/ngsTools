@@ -1,5 +1,5 @@
 
-A short tutorial for some basic analyses using ngsTools (plus ANGSD and NGSadmix)
+A tutorial for some basic analyses using ngsTools/ANGSD
 ===============
 
 Please be sure you are using the most updated version of ngsTools. In doubt please run: 
@@ -10,12 +10,6 @@ Please be sure you are using the most updated version of ngsTools. In doubt plea
     make
 	
 inside the ngsTools directory.
-
-Compatibility issues with ANGSD
----------------
-
-We are currently working on updating ngsTools with the latest version of ANGSD! 
-Check back soon or subscribe to our google mailing list.
 
 Settings
 ----------
@@ -41,6 +35,12 @@ Second, create all directories where you will be working:
     mkdir Data
     mkdir Results
 
+Our goal in this tutorial is to show how to go from BAM files to summary statistics using ngsTools/ANGSD.
+Namely we will see how to perform the following analyses:
+* basic data filtering
+* population structure (PCA, genetic distances, MDS, admixture proportions)
+* population genetic differentiation (FST/PBS)
+* nucleotide diversity
 
 Data
 ----------
@@ -73,6 +73,7 @@ As a note for the general use, in case an ancestral sequence is not available, a
 Please be aware that, under this scenario, some quantities (e.g. the unfolded joint site frequency spectrum) will be nonsense.
 
 Please note that, since we are randomly subsampling reads here, your results in this tutorial may (slightly) differ from what written here. 
+
 
 Basic filtering using ANGSD
 ----------------------
