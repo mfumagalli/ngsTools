@@ -1,6 +1,6 @@
 
 EXT = htslib angsd
-TOOLS = ngsSim ngsPopGen ngsUtils ngsDist ngsF
+TOOLS = ngsSim ngsPopGen ngsUtils ngsDist ngsF ngsF-HMM
 
 
 all: $(EXT) $(TOOLS)

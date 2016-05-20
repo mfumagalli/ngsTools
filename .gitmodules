@@ -19,3 +19,6 @@
 [submodule "ngsDist"]
 	path = ngsDist
 	url = https://github.com/fgvieira/ngsDist.git
+[submodule "ngsF-HMM"]
+	path = ngsF-HMM
+	url = https://github.com/fgvieira/ngsF-HMM.git
