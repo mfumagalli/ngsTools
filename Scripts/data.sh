@@ -13,6 +13,8 @@ echo Is this your path to wget? $WGET
 echo Is this your path to gunzip? $GUNZIP
 echo Is this your path to bgzip? $BGZIP
 
+CHROM=11
+
 echo Retrieving file names...
 NS=20 # first 20 samples
 for POP in LWK TSI PEL;
@@ -42,7 +44,7 @@ do
 	do
 		NAME=`echo -n $i | tail -c 58`
 		echo $NAME
-		$SAMTOOLS view -s 0.5 -h ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/phase3/$i 11:61000000-62000000 > Data/$POP.BAMs$NAME 2> /dev/null
+		$SAMTOOLS view -s 0.5 -h ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/phase3/$i $CHROM:61000000-62000000 > Data/$POP.BAMs$NAME 2> /dev/null
 	done
 done
 rm *.bai
@@ -56,20 +58,24 @@ ls Data/PEL.BAMs/*.bam > PEL.bamlist
 
 # download ancestral sequence
 echo Downloading and processing ancestral sequence...
-$WGET http://dna.ku.dk/~thorfinn/hg19ancNoChr.fa.gz &>/dev/null
-mv hg19ancNoChr.fa.gz anc.fa.gz
-$SAMTOOLS faidx anc.fa.gz
-mv anc.fa* Data/.
+wget ftp://ftp.ensembl.org/pub/release-65/fasta/ancestral_alleles/homo_sapiens_ancestor_GRCh37_e65.tar.bz
+tar xjf homo_sapiens_ancestor_GRCh37_e65.tar.bz
+cp homo_sapiens_ancestor_GRCh37_e65/homo_sapiens_ancestor_$CHROM.fa Data/tmp.fa
+sed "1s/.*/>1/" Data/tmp.fa > Data/anc.fa
+rm Data/tmp.fa
+$BGZIP Data/anc.fa
+$SAMTOOLS faidx Data/anc.fa.gz
+rm -rf homo_sapiens_ancestor_GRCh37_e65*
 
 # download reference sequence
 echo Downloading and processing reference sequence...
-$WGET http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz &>/dev/null
-$GUNZIP -c hs37d5.fa.gz > ref.fa 2>/dev/null
-rm hs37d5.fa.gz
-echo ... be patient...
-$BGZIP ref.fa
-$SAMTOOLS faidx ref.fa.gz
-mv ref.fa* Data/.
+wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/human_g1k_v37.fasta.gz &> /dev/null
+zcat human_g1k_v37.fasta.gz > Data/tmp.fa 2> /dev/null
+$SAMTOOLS faidx Data/tmp.fa
+$SAMTOOLS faidx Data/tmp.fa $CHROM > Data/ref.fa
+$BGZIP Data/ref.fa
+$SAMTOOLS faidx Data/ref.fa.gz
+rm Data/tmp.fa
 
 echo Done!
 ls -lh Data/* > Data/download.log
