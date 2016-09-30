@@ -184,7 +184,7 @@ We are now printing the distribution of quality scores and per-site depths (glob
 $ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL.qc \
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
 	-minMapQ 20 \
-        -doQsDist 1 -doDepth 1 -doCounts 1 -maxDepth 1000 &> /dev/null
+        -doQsDist 1 -doDepth 1 -doCounts 1 -maxDepth 1000 -r 11 &> /dev/null
 ```
 As input we give the list of BAM files with option `-b` and then specify the references sequence with `-ref` and the prefix for output files with `-out`.
 Additionally, ```-C 50``` reduces the effect of reads with excessive mismatches, while ```-baq 1``` computes base alignment quality as explained here ([BAQ](http://samtools.sourceforge.net/mpileup.shtml)) to rule out false SNPs close to INDELS, and ```-trim 0``` means that we are not trimming the ends of reads.
@@ -377,7 +377,7 @@ $ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL \
         -minMapQ 20 -minQ 20 -minInd 30 -setMinDepth 60 -setMaxDepth 400 -doCounts 1 \
         -GL 1 -doMajorMinor 1 -doMaf 1 -skipTriallelic 1 \
         -SNP_pval 1e-3\
-        -doGeno 32 -doPost 1 &> /dev/null
+        -doGeno 32 -doPost 1 -r 11 &> /dev/null
 ```
 Unzip the results (but you cannot open it since it is in binary format)
 ```
@@ -440,7 +440,7 @@ $ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL \
         -minMapQ 20 -minQ 20 -minInd 30 -setMinDepth 60 -setMaxDepth 400 -doCounts 1 \
         -GL 1 -doMajorMinor 1 -doMaf 1 -skipTriallelic 1 \
         -SNP_pval 1e-3 \
-        -doGeno 8 -doPost 1 &> /dev/null
+        -doGeno 8 -doPost 1 -r 11 &> /dev/null
 ```
 
 Record how many sites we retrieve (although this should be equal what found earlier):
@@ -490,7 +490,7 @@ $ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL \
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
         -minMapQ 20 -minQ 20 -minInd 30 -setMinDepth 60 -setMaxDepth 400 -doCounts 1 \
         -GL 1 -doMajorMinor 4 -doMaf 1 -skipTriallelic 1 \
-	-doGlf 2 -SNP_pval 1e-6 &> /dev/null
+	-doGlf 2 -SNP_pval 1e-6 -r 11 &> /dev/null
 ```
 Note that, as an illustration, here we use a more stringent cutoff for SNP calling and we impose of the the alleles to be the reference one.
 
@@ -518,7 +518,7 @@ $ANGSD/angsd -P 4 -b LWK.bamlist -ref $REF -out Results/LWK \
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
         -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 150 -doCounts 1 \
         -GL 1 -doMajorMinor 4 -doMaf 1 -skipTriallelic 1 \
-        -doGlf 3 -SNP_pval 1e-6 &> /dev/null
+        -doGlf 3 -SNP_pval 1e-6 -r 11 &> /dev/null
 ```
 
 Inbreeding coefficients are calculated by first estimating reliable starting values and then performing a deep search, with the following commands:
@@ -587,7 +587,7 @@ do
 	$ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP \
 		-uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
 		-minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
-		-GL 1 -doSaf 1 &> /dev/null
+		-GL 1 -doSaf 1 -r 11 &> /dev/null
 done
 ```
 
@@ -774,7 +774,7 @@ do
                 -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
                 -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
                 -GL 1 -doSaf 1 \
-		-doThetas 1 -pest Results/$POP.sfs &> /dev/null
+		-doThetas 1 -pest Results/$POP.sfs -r 11 &> /dev/null
 done
 ```
 
@@ -831,7 +831,7 @@ do
                 -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
                 -minMapQ 20 -minQ 20 -minInd 5 -setMinDepth 5 -setMaxDepth 200 -doCounts 1 \
                 -GL 1 -doMajorMinor 5 -doMaf 1 -skipTriallelic 1 \
-                -sites Data/snps.txt &> /dev/null
+                -sites Data/snps.txt -r 11 &> /dev/null
 done
 ```
 Inspect the results.
@@ -856,7 +856,7 @@ do
         $ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP \
                 -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
                 -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
-                -GL 1 -doSaf 1 &> /dev/null
+                -GL 1 -doSaf 1 -r 11 &> /dev/null
 done
 ```
 
@@ -877,7 +877,7 @@ do
         $ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP \
                 -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
                 -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
-                -GL 1 -doSaf 1 \
+                -GL 1 -doSaf 1 -r 11 \
 		-sites Data/intersect.txt &> /dev/null
 done
 ```
@@ -940,7 +940,7 @@ do
                 -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
                 -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
                 -GL 1 -doSaf 1 -pest Results/$POP.sfs \
-                -sites Data/intersect.txt &> /dev/null
+                -sites Data/intersect.txt -r 11 &> /dev/null
 done
 ```
 
