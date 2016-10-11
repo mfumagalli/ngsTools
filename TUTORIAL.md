@@ -181,12 +181,13 @@ Before proceeding, we need to specify the reference and ancestral sequences.
 
 We are now printing the distribution of quality scores and per-site depths (global and per-sample).
 ```
-$ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL.qc \
+$ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL.qc -r 11\
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
 	-minMapQ 20 \
         -doQsDist 1 -doDepth 1 -doCounts 1 -maxDepth 1000 &> /dev/null
 ```
 As input we give the list of BAM files with option `-b` and then specify the references sequence with `-ref` and the prefix for output files with `-out`.
+Please note that we are analysing only part of chromosome 11, indicated by `-r 11`.
 Additionally, ```-C 50``` reduces the effect of reads with excessive mismatches, while ```-baq 1``` computes base alignment quality as explained here ([BAQ](http://samtools.sourceforge.net/mpileup.shtml)) to rule out false SNPs close to INDELS, and ```-trim 0``` means that we are not trimming the ends of reads.
 With ```-minMapQ 20``` we filter out reads with low mapping quality.
 Finally, ```-maxDepth 1000``` means that all sites with depth equal or greater than 1000 will be binned together, and ```-P 4``` means that I am using 4 threads.
@@ -372,7 +373,7 @@ More specifically, the next program we are going to use (ngsTools) takes as inpu
 Also, we are using a HWE-based prior with `-doPost 1`.
 Recalling also our choice for data filtering, our command line is:
 ```
-$ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL \
+$ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL -r 11 \
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
         -minMapQ 20 -minQ 20 -minInd 30 -setMinDepth 60 -setMaxDepth 400 -doCounts 1 \
         -GL 1 -doMajorMinor 1 -doMaf 1 -skipTriallelic 1 \
@@ -435,7 +436,7 @@ We are using [ngsDist](https://github.com/fgvieira/ngsDist) to estimate pairwise
 
 Again, we run ANGSD to compute genotype psoterior probabilities assuming HWE and specifying the output format with `-doGeno`:
 ```
-$ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL \
+$ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL -r 11 \
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
         -minMapQ 20 -minQ 20 -minInd 30 -setMinDepth 60 -setMaxDepth 400 -doCounts 1 \
         -GL 1 -doMajorMinor 1 -doMaf 1 -skipTriallelic 1 \
@@ -486,7 +487,7 @@ The first line gives the proportion of explained variance by each component, and
 Admixture proportions can be estimated from genotype likelihoods using [NGSadmix](http://popgen.dk/angsd/index.php/NGSadmix), which requires input files in BEAGLE format.
 This can be accomplished in ANGSD with the following command:
 ```
-$ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL \
+$ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL -r 11 \
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
         -minMapQ 20 -minQ 20 -minInd 30 -setMinDepth 60 -setMaxDepth 400 -doCounts 1 \
         -GL 1 -doMajorMinor 4 -doMaf 1 -skipTriallelic 1 \
@@ -514,7 +515,7 @@ You also need to perform a SNP calling and ideally perform this analysis only on
 This can be achieved (for instance) by randomly sampling sites at a given distance (not shown here).
 Please also note that here we are performing this analysis on a single population (African as an illustration) and not for the pooled sample.
 ```
-$ANGSD/angsd -P 4 -b LWK.bamlist -ref $REF -out Results/LWK \
+$ANGSD/angsd -P 4 -b LWK.bamlist -ref $REF -out Results/LWK -r 11 \
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
         -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 150 -doCounts 1 \
         -GL 1 -doMajorMinor 4 -doMaf 1 -skipTriallelic 1 \
@@ -584,7 +585,7 @@ We cycle across all populations:
 for POP in LWK TSI PEL
 do
 	echo $POP
-	$ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP \
+	$ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP -r 11 \
 		-uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
 		-minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
 		-GL 1 -doSaf 1 &> /dev/null
@@ -770,7 +771,7 @@ First we compute the allele frequency posterior probabilities and associated sta
 for POP in LWK TSI PEL
 do
 	echo $POP
-	$ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP \
+	$ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP -r 11 \
                 -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
                 -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
                 -GL 1 -doSaf 1 \
@@ -827,7 +828,7 @@ Note that here we change the filtering (more relaxed) since we are interested in
 for POP in LWK TSI PEL
 do
         echo $POP
-        $ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP \
+        $ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP -r 11 \
                 -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
                 -minMapQ 20 -minQ 20 -minInd 5 -setMinDepth 5 -setMaxDepth 200 -doCounts 1 \
                 -GL 1 -doMajorMinor 5 -doMaf 1 -skipTriallelic 1 \
@@ -853,7 +854,7 @@ We first compute the sample allele frequency likelihoods using ANGSD.
 for POP in LWK TSI PEL
 do
         echo $POP
-        $ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP \
+        $ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP -r 11 \
                 -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
                 -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
                 -GL 1 -doSaf 1 &> /dev/null
@@ -874,7 +875,7 @@ We then compute the sample allele frequency likelihoods only for the overlapping
 for POP in TSI PEL
 do
         echo $POP
-        $ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP \
+        $ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP -r 11 \
                 -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
                 -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
                 -GL 1 -doSaf 1 \
@@ -936,7 +937,7 @@ From these priors, we calculate the sample allele frequency posterior probabilit
 for POP in LWK TSI PEL
 do
         echo $POP
-        $ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP \
+        $ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP -r 11 \
                 -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
                 -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
                 -GL 1 -doSaf 1 -pest Results/$POP.sfs \
@@ -945,7 +946,9 @@ done
 ```
 
 Assuming we are interested in LWK and PEL, we can now calculate some summary statistics, namely number of segregating sites, expected heterozygosity, number of fixed differences and dxy.
-Please note that the latter 2 statistics have not been properly tested. For instance, dxy been shown to be over-estimated and should be used only for inspecting the distribution and not to make inferences based on its absolute values.
+Please note that the latter 2 statistics have not been properly tested. 
+For instance, dxy been shown to be over-estimated and should be used only for inspecting the distribution and not to make inferences based on its absolute values.
+In case you want to estimate dxy, you can find in `ngsTools/ngsPopGen/scripts` folder a script written by [Nagarjun Vijay](https://lsa.umich.edu/eeb/people/postdoctoral-fellows/nagarju.html) from ANGSD files.
 ```
 zcat Results/LWK.saf.gz > Results/LWK.saf
 zcat Results/PEL.saf.gz > Results/PEL.saf
