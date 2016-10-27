@@ -2,10 +2,23 @@
 A tutorial for some basic analyses using ngsTools/ANGSD
 ===============
 
+Installation
+--------------------
+
+We recommend to install ANGSD separately following the instructions [here][http://popgen.dk/angsd/index.php/Download_and_installation]:
+
+    git clone https://github.com/samtools/htslib.git
+    git clone https://github.com/ANGSD/angsd.git 
+    cd htslib;make;cd ../angsd ;make HTSSRC=../htslib
+    cd angsd;make
+
 Please be sure you are using the most updated version of ngsTools. In doubt please run: 
 
     git pull
     git submodule update
+
+and in case you need to update something, type:
+
     make clean
     make
 	
@@ -19,10 +32,10 @@ Please note that [ANGSD](http://popgen.dk/angsd/index.php/Main_Page#Overview) an
 However, given the utility of such tools, we felt the need to include them to present a more comprehensive view on the application of this probabilistic approach to process NGS data in population genetics.
 Finally, we are using [SAMtools](http://samtools.sourceforge.net/) for indexing files, [FastMe](http://www.atgc-montpellier.fr/fastme/) for plotting trees and [R](https://www.r-project.org/) for manipulating and plotting results. This tutorial has been tested with SAMtools version 1.3.1, FastME version 2.1.4, R version 3.2.5.
 
-First, set directories to all required programs depending on where you installed them:
+First, set directories to all required programs depending on where you installed them, for instance these are my paths:
 
     NGSTOOLS=/data/Software/ngsTools
-    ANGSD=$NGSTOOLS/angsd
+    ANGSD=/data/data/Software/angsd
     NGSADMIX=/data/data/Software/NGSadmix/NGSadmix
 
     SAMTOOLS=/data/data/Software/samtools-1.3/samtools
@@ -843,6 +856,8 @@ zcat Results/LWK.mafs.gz Results/TSI.mafs.gz Results/PEL.mafs.gz
 Summary statistics using ngsTools
 -----------------------------------
 
+IMPORTANT NOTE: we recommend the use of ANGSD to calculate summary statistics. While the rationale behing these estimations are very similar with ngsTools, ANGSD provides a much better implementation.
+
 Most of the summary statistics can be now estimated using ANGSD using the commands described above.
 For the sake of completeness, here we show how we can perform similar analyses using ngsTools, although ANGSD may be faster and require less memory than ngsTools.
 Note that the methods behind how ANGSD and ngsTools estimate such quantities are very similar.
@@ -947,8 +962,10 @@ done
 
 Assuming we are interested in LWK and PEL, we can now calculate some summary statistics, namely number of segregating sites, expected heterozygosity, number of fixed differences and dxy.
 Please note that the latter 2 statistics have not been properly tested. 
+
 For instance, dxy been shown to be over-estimated and should be used only for inspecting the distribution and not to make inferences based on its absolute values.
-In case you want to estimate dxy, you can find in `ngsTools/ngsPopGen/scripts` folder a script written by [Nagarjun Vijay](https://lsa.umich.edu/eeb/people/postdoctoral-fellows/nagarju.html) from ANGSD files.
+In case you want to estimate dxy, you can find in `ngsTools/ngsPopGen/scripts` folder a perl script written by [Nagarjun Vijay](https://lsa.umich.edu/eeb/people/postdoctoral-fellows/nagarju.html) and a R script written by [Joshua Penalba][https://joshuapenalba.com/] which calculate Dxy from ANGSD allele frequency files. Please see the script for help.
+
 ```
 zcat Results/LWK.saf.gz > Results/LWK.saf
 zcat Results/PEL.saf.gz > Results/PEL.saf
