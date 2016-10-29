@@ -30,7 +30,7 @@ NOTE - this repository is intended for general use as it groups together the lat
 
 * [ngsDist](https://github.com/fgvieira/ngsDist) is a program that estimates genetic distances for phylogenetic analyses from genotype posterior probabilities ([Vieira et al., 2016](http://onlinelibrary.wiley.com/doi/10.1111/bij.12511/abstract)).
 
-* [ngsF-HMM](https://github.com/fgvieira/ngsF-HMM) is a program developed and written by F.G. Vieira to estimate per-individual inbreeding tracts using a two-state Hidden Markov Model (Vieira et al. 2016 Bioinformatics). It uses a probabilistic framework that takes the uncertainty of genotype's assignation into account; making it specially suited for low-quality or low-coverage datasets. It is not officially part of ngsTools so it must be installed separately.
+* [ngsF-HMM](https://github.com/fgvieira/ngsF-HMM) is a program developed and written by F.G. Vieira to estimate per-individual inbreeding tracts using a two-state Hidden Markov Model ([Vieira et al. 2016](http://bioinformatics.oxfordjournals.org/content/32/14/2096)). It uses a probabilistic framework that takes the uncertainty of genotype's assignation into account; making it specially suited for low-quality or low-coverage datasets. It is not officially part of ngsTools so it must be installed separately.
 
 ## Installation
 
@@ -100,53 +100,50 @@ ngsTools package can be cited as:
 
 	ngsTools: methods for population genetics analyses from next-generation sequencing data.
 	Fumagalli M, Vieira FG, Linderoth T, Nielsen R.
-	2014 May 15;30(10):1486-7. doi: 10.1093/bioinformatics/btu041. Epub 2014 Jan 23.
-	http://www.ncbi.nlm.nih.gov/pubmed/24458950
+	Bioinformatics. 2014 May 15;30(10):1486-7
 
 ANGSD can be cited as:
 
 	ANGSD: Analysis of Next Generation Sequencing Data.
-	Korneliussen T, Albrechtsen A, Nielsen R.
-	BMC Bioinformatics. 2014 Nov 25;15(1):356. [Epub ahead of print]
-	http://www.ncbi.nlm.nih.gov/pubmed/25420514
+	Korneliussen T, Albrechtsen A, Nielsen R
+	BMC Bioinformatics. 2014 Nov 25;15(1):356
 
 	SNP calling, genotype calling, and sample allele frequency estimation from New-Generation Sequencing data.
-	Nielsen R, Korneliussen T, Albrechtsen A, Li Y, Wang J.
-	PLoS One. 2012;7(7):e37558. doi: 10.1371/journal.pone.0037558. Epub 2012 Jul 24.
+	Nielsen R, Korneliussen T, Albrechtsen A, Li Y, Wang J
+	PLoS One. 2012;7(7):e37558
 
 FST and PCA methods can be cited as:
 
 	Quantifying Population Genetic Differentiation from Next-Generation Sequencing Data.
-	Fumagalli M, Vieira FG, Korneliussen TS, Linderoth T, Huerta-Sánchez E, Albrechtsen A, Nielsen R.
-	Genetics. 2013 Nov;195(3):979-92. doi: 10.1534/genetics.113.154740. Epub 2013 Aug 26.
+	Fumagalli M, Vieira FG, Korneliussen TS, Linderoth T, Huerta-Sánchez E, Albrechtsen A, Nielsen R
+	Genetics. 2013 Nov;195(3):979-92
 
 Inbreeding estimation can be cited as:
 
 	Estimating inbreeding coefficients from NGS data: impact on genotype calling and allele frequency estimation.
-	Vieira FG, Fumagalli M, Albrechtsen A, Nielsen R.
-	Genome Res. 2013 Nov;23(11):1852-61. doi: 10.1101/gr.157388.113. Epub 2013 Aug 15.
+	Vieira FG, Fumagalli M, Albrechtsen A, Nielsen R
+	Genome Res. 2013 Nov;23(11):1852-61
+
+	Estimating IBD tracts from low coverage NGS data
+	Vieira FG, Albrechtsen A and Nielsen R
+	Bioinformatics. 2016; 32:2096-2102
 
 Nucleotide diversity estimates from NGS data implemented here have been proposed in:
 
 	Sequencing of 50 human exomes reveals adaptation to high altitude.
-	Yi X, Liang Y, Huerta-Sanchez E, Jin X, Cuo ZX, Pool JE, Xu X, Jiang H, Vinckenbosch N, Korneliussen TS, Zheng H, Liu T, He W, Li K, Luo R, Nie X, Wu H, Zhao M, Cao H, Zou J, Shan Y, Li S, Yang Q, Asan, Ni P, Tian G, Xu J, Liu X, Jiang T, Wu R, Zhou G, Tang M, Qin J, Wang T, Feng S, Li G, Huasang, Luosang J, Wang W, Chen F, Wang Y, Zheng X, Li Z, Bianba Z, Yang G, Wang X, Tang S, Gao G, Chen Y, Luo Z, Gusang L, Cao Z, Zhang Q, Ouyang W, Ren X, Liang H, Zheng H, Huang Y, Li J, Bolund L, Kristiansen K, Li Y, Zhang Y, Zhang X, Li R, Li S, Yang H, Nielsen R, Wang J, Wang J.
-	Science. 2010 Jul 2;329(5987):75-8. doi: 10.1126/science.1190371.
+	Yi X, Liang Y, Huerta-Sanchez E, Jin X, Cuo ZX, Pool JE, Xu X, Jiang H, Vinckenbosch N, Korneliussen TS, Zheng H, Liu T, He W, Li K, Luo R, Nie X, Wu H, Zhao M, Cao H, Zou J, Shan Y, Li S, Yang Q, Asan, Ni P, Tian G, Xu J, Liu X, Jiang T, Wu R, Zhou G, Tang M, Qin J, Wang T, Feng S, Li G, Huasang, Luosang J, Wang W, Chen F, Wang Y, Zheng X, Li Z, Bianba Z, Yang G, Wang X, Tang S, Gao G, Chen Y, Luo Z, Gusang L, Cao Z, Zhang Q, Ouyang W, Ren X, Liang H, Zheng H, Huang Y, Li J, Bolund L, Kristiansen K, Li Y, Zhang Y, Zhang X, Li R, Li S, Yang H, Nielsen R, Wang J, Wang J
+	Science. 2010 Jul 2;329(5987):75-8
 
 	Calculation of Tajima's D and other neutrality test statistics from low depth next-generation sequencing data.
-	Korneliussen TS, Moltke I, Albrechtsen A, Nielsen R.
-	BMC Bioinformatics. 2013 Oct 2;14(1):289. [Epub ahead of print]
+	Korneliussen TS, Moltke I, Albrechtsen A, Nielsen R
+	BMC Bioinformatics. 2013 Oct 2;14(1):289
 
 	Assessing the effect of sequencing depth and sample size in population genetics inferences.
-	Fumagalli M.
-	PLoS One. 2013 Nov 18;8(11):e79667. doi: 10.1371/journal.pone.0079667.
+	Fumagalli M
+	PLoS One. 2013 Nov 18;8(11):e79667
 
 Estimation of genetic distances have been described here:
 
 	Improving the estimation of genetic distances from Next-Generation Sequencing data.
-	Vieira FG, Lassalle F, Korneliussen TS, Fumagalli M.
-	Biological Journal of the Linnean Society. Special Issue: Collections-Based Research in the Genomic Era. Volume 117, Issue 1, pages 139–149, January 2016. Article first published online: 30 MAR 2015.
-
-
-
-
-
+	Vieira FG, Lassalle F, Korneliussen TS, Fumagalli M
+	Biological Journal of the Linnean Society. Special Issue: Collections-Based Research in the Genomic Era. 117(1):139–149
