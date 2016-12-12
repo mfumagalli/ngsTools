@@ -31,6 +31,8 @@ In this tutorial we will be using several programs including ngsTools, ANGSD and
 Please note that [ANGSD](http://popgen.dk/angsd/index.php/Main_Page#Overview) and [NGSadmix](http://www.popgen.dk/software/index.php/NgsAdmix) have not been developed by us and therefore questions on these tools should be addressed to their Authors.
 However, given the utility of such tools, we felt the need to include them to present a more comprehensive view on the application of this probabilistic approach to process NGS data in population genetics.
 Finally, we are using [SAMtools](http://samtools.sourceforge.net/) for indexing files, [FastMe](http://www.atgc-montpellier.fr/fastme/) for plotting trees and [R](https://www.r-project.org/) for manipulating and plotting results. This tutorial has been tested with SAMtools version 1.3.1, FastME version 2.1.4, R version 3.2.5.
+Please note that R scripts provided for plot here are for illustrative purposes with the example data sets only.
+They should be modified if you want to use them with your data set.
 
 First, set directories to all required programs depending on where you installed them, for instance these are my paths:
 
@@ -800,11 +802,10 @@ do
 	# index files
 	$ANGSD/misc/thetaStat make_bed Results/$POP.thetas.gz &> /dev/null
 	# perform a sliding-window analysis
-	$ANGSD/misc/thetaStat do_stat Results/$POP.thetas.gz -nChr 1 -win 50000 -step 10000 -outnames Results/$POP.thetas &> /dev/null
+	$ANGSD/misc/thetaStat do_stat Results/$POP.thetas.gz -nChr 40 -win 50000 -step 10000 -outnames Results/$POP.thetas &> /dev/null
 done
 ```
 Values in this output file are the sum of the per-site estimates for the whole window.
-Output of Tajima D looks currently disabled.
 For instance:
 ```
 less -S Results/PEL.thetas.pestPG
