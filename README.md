@@ -36,6 +36,7 @@ NOTE - this repository is intended for general use as it groups together the lat
 
 `ngsTools` can be easily installed but some packages have some external dependencies:
 
+* `gcc` : v4.9.2 tested on Debian 7.8 (wheezy)
 * `zlib`: v1.2.7 tested on Debian 7.8 (wheezy)
 * `gsl` : v1.15 tested on Debian 7.8 (wheezy)
 * `md5sum`: only needed for `make test`
