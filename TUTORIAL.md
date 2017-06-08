@@ -522,6 +522,7 @@ The first line gives the proportion of explained variance by each component, and
 You can plot the resulting components:
 ```
 Rscript $NGSTOOLS/Scripts/plotMDS.R -i Results/ALL.mds -c 1-2 -a Results/ALL.clst -o Results/ALL.mds.pdf
+evince Results/ALL.mds.pdf
 ```
 
 ## Admixture proportions
@@ -531,19 +532,23 @@ This can be accomplished in ANGSD with the following command:
 ```
 $ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL -r 11 \
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
-        -minMapQ 20 -minQ 20 -minInd 30 -setMinDepth 60 -setMaxDepth 400 -doCounts 1 \
+        -minMapQ 20 -minQ 20 -minInd 15 -setMinDepth 60 -setMaxDepth 400 -doCounts 1 \
         -GL 1 -doMajorMinor 4 -doMaf 1 -skipTriallelic 1 \
 	-doGlf 2 -SNP_pval 1e-6 &> /dev/null
 ```
-Note that, as an illustration, here we use a more stringent cutoff for SNP calling and we impose of the the alleles to be the reference one.
+Note that, as an illustration, here we use a more stringent cutoff for SNP calling and we impose of the the alleles to be the reference one (-doMajorMinor 4).
 
 Assuming we want to test for 3 ancestral components, admixture proportions can be obtained with:
 ```
 K=3
-$NGSADMIX -likes Results/ALL.beagle.gz -K $K -outfiles Results/ALL -P 4 -minMaf 0.01 -minInd 30 &> /dev/null
+$NGSADMIX -likes Results/ALL.beagle.gz -K $K -outfiles Results/ALL -P 4 -minMaf 0 &> /dev/null
 ```
 and results are stored in the following files 'Results/ALL.qopt' and 'Results/ALL.fopt.gz', the former containing the inferred proportions for each individual.
-
+You can plot the admixture proportions:
+```
+Rscript $NGSTOOLS/Scripts/plotAdmix.R -i Results/ALL.qopt -o Results/ALL.admix.pdf &> /dev/null
+evince Results/ALL.admix.pdf
+```
 
 Inbreeding
 ------------------------------------------
@@ -555,27 +560,97 @@ This can be achieved from genotype likelihoods using [ngsF](https://github.com/f
 First, again we need to calculate genotype likelihoods in a format accepted by ngsF.
 You also need to perform a SNP calling and ideally perform this analysis only on unlinked sites.
 This can be achieved (for instance) by randomly sampling sites at a given distance (not shown here).
-Please also note that here we are performing this analysis on a single population (African as an illustration) and not for the pooled sample.
+Please also note that here we are performing this analysis on single populations and not for the pooled sample.
 ```
-$ANGSD/angsd -P 4 -b LWK.bamlist -ref $REF -out Results/LWK -r 11 \
-        -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
-        -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 150 -doCounts 1 \
-        -GL 1 -doMajorMinor 4 -doMaf 1 -skipTriallelic 1 \
-        -doGlf 3 -SNP_pval 1e-6 &> /dev/null
-```
-
-Inbreeding coefficients are calculated by first estimating reliable starting values and then performing a deep search, with the following commands:
-```
-N_SITES=`zcat Results/LWK.mafs.gz | tail -n+2 | wc -l`
-
-zcat Results/LWK.glf.gz | $NGSTOOLS/ngsF/ngsF --n_ind 20 --n_sites $N_SITES --glf - --min_epsilon 1e-6 --out Results/LWK.approx_indF --approx_EM --seed 0 --init_values u -max_iters 500 --verbose 0
-
-zcat Results/LWK.glf.gz | $NGSTOOLS/ngsF/ngsF --n_ind 20 --n_sites $N_SITES --glf - --min_epsilon 1e-9 --out Results/LWK.indF --seed 0 --init_values Results/LWK.approx_indF.pars -max_iters 1500 --verbose 0
-
-cat Results/LWK.indF
+for POP in LWK TSI PEL;
+do
+	echo $POP
+	$ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -out Results/$POP -r 11 \
+        	-uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+        	-minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
+        	-GL 1 -doMajorMinor 1 -doMaf 1 -skipTriallelic 1 \
+        	-doGlf 3 -SNP_pval 1e-3 &> /dev/null
+done
 ```
 
-If the estimate inbreeding coefficients are different than 0, you may want to correct your prior on genotypes and allele frequencies accordingly.
+Inbreeding coefficients are calculated by first estimating reliable starting values and then performing a deep search.
+We can do this using ngsF:
+```
+NSAMS=10
+for POP in LWK TSI PEL;
+do
+	NSITES=`zcat Results/${POP}.mafs.gz | tail -n+2 | wc -l`
+	echo $POP $NSAMS $NSITES
+
+	# preliminary search
+	zcat Results/$POP.glf.gz | $NGSTOOLS/ngsF/ngsF --n_ind $NSAMS --n_sites $NSITES --glf - --out Results/$POP.approx_indF --approx_EM --init_values u --n_threads 4 &> /dev/null
+
+	zcat Results/$POP.glf.gz | $NGSTOOLS/ngsF/ngsF --n_ind $NSAMS --n_sites $NSITES --glf - --out Results/$POP.indF --init_values Results/$POP.approx_indF.pars --n_threads 4 &> /dev/null
+
+	cat Results/$POP.indF
+
+done
+```
+
+We can even use a routine in ngsF that computes 20 initial searches to find the best starting point (this will create a temporary directory in /home/scratch):
+```
+NSAMS=10
+for POP in LWK TSI PEL;
+do
+	NSITES=`zcat Results/${POP}.mafs.gz | tail -n+2 | wc -l`
+        echo $POP $NSAMS $NSITES
+
+	zcat Results/$POP.glf.gz > Results/$POP.glf
+	$NGSTOOLS/ngsF/ngsF.sh --n_ind $NSAMS --n_sites $NSITES --glf Results/$POP.glf --out Results/$POP.indF &> /dev/null
+
+	cat Results/$POP.indF
+
+done
+```
+
+If the estimate inbreeding coefficients are much larger than 0, you may want to correct your prior on genotypes and allele frequencies accordingly.
+For instance, if we want to calculate genotype posterior probabilities taking into account the individual estimated inbreeding coefficients, we can use options `-doSaf 2 -indF ...indF`.
+Please note that we also need to specify an ancestral sequence with `-anc`.
+```
+for POP in LWK TSI PEL;
+do
+	echo $POP
+	$ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP.inbred -r 11 \
+        	-uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+        	-minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
+        	-GL 1 -doMajorMinor 1 -doMaf -1 -skipTriallelic 1 \
+        	-SNP_pval 1e-3 \
+        	-doGeno 20 -doPost 1 \
+		-doSaf 2 -indF Results/$POP.indF &> /dev/null
+done
+```
+Note that, as an illustration here, the option `-doMaf 1` will not print out a file with the allele frequencies.
+Other analyses involving allele frequencies, as we will see later, can be done incorporating individual inbreeding coefficients.
+
+Additionally, one can estimate per-individual inbreeding tracts via a two-state Hidden Markov Model (HMM) using [ngsF-HMM](https://github.com/fgvieira/ngsF-HMM).
+You again need genotype likelihoods generated with `-doGlf 3` option.
+```
+NSAMS=10
+for POP in LWK TSI PEL;
+do
+        echo $POP
+
+	# uncomment if you don't have these files already
+	$ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -out Results/$POP -r 11 \
+                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+                -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
+                -GL 1 -doMajorMinor 1 -doMaf 1 -skipTriallelic 1 \
+                -doGlf 3 -SNP_pval 1e-3 &> /dev/null
+
+	zcat Results/$POP.glf.gz > Results/$POP.glf
+
+	NSITES=$((`zcat Results/$POP.mafs.gz | wc -l`-1))
+
+	echo $POP $NSITES
+
+	$NGSTOOLS/ngsF-HMM --geno Results/$POP.glf --loglkl --n_ind $NSAMS --n_sites $NSITES --freq r --freq_est 2 --indF 0.1,0.1 --out Results/$POP.F-HMM --n_threads 4 &> /dev/null
+done
+```
 
 
 Summary statistics using ANGSD
