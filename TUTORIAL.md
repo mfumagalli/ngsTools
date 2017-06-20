@@ -31,7 +31,7 @@ In this tutorial we will be using several programs including ngsTools, ANGSD and
 Please note that [ANGSD](http://popgen.dk/angsd/index.php/Main_Page#Overview) and [NGSadmix](http://www.popgen.dk/software/index.php/NgsAdmix) have not been developed by us and therefore questions on these tools should be addressed to their Authors.
 However, given the utility of such tools, we felt the need to include them to present a more comprehensive view on the application of this probabilistic approach to process NGS data in population genetics.
 Finally, we are using [SAMtools](http://samtools.sourceforge.net/) for indexing files, [FastMe](http://www.atgc-montpellier.fr/fastme/) for plotting trees and [R](https://www.r-project.org/) for manipulating and plotting results. 
-This tutorial has been tested on a Linux Ubuntu machine with ANGSD version 0.917-126-gb1d9615 (htslib: 1.4-30-g6a50863), SAMtools version 1.4.1, FastME version 2.1.5, R version 3.4.0 (with packages: methods, optparse, ggplot2, ape, phangorn).
+This tutorial has been tested on a Linux Ubuntu machine with ANGSD version 0.917-126-gb1d9615 (htslib: 1.4-30-g6a50863), SAMtools version 1.4.1, FastME version 2.1.5, R version 3.4.0 (with packages: methods, optparse, ggplot2, ape, phangorn, plot3D, plot3Drgl, rgl).
 
 Please note that R scripts provided for plot here are for illustrative purposes with the example data sets only.
 They should be modified if you want to use them with your data set.
@@ -508,11 +508,26 @@ cat Results/ALL.tree
 ```
 We can use some R packages to plot the resulting tree.
 ```
-Rscript -e 'library(ape); library(phangorn); pdf(file="Results/ALL.tree.pdf"); plot(read.tree("Results/ALL.tree"), cex=0.5); dev.off();' &> /dev/null
+Rscript $NGSTOOLS/Scripts/plotTree.R Results/ALL.tree
 evince Results/ALL.tree.pdf
 ```
 
-From these distances, we can also perform a MDS analysis and investigate the population genetic structure of our samples.
+One can even generate bootstrapped replicates of genetic distances in order to get a measure of confidence intervals.
+This can be achieved by using the following options:
+```
+$NGSTOOLS/ngsDist/ngsDist -verbose 1 -geno Results/ALL.geno.gz -probs -n_ind 30 -n_sites $NSITES -labels Data/pops.label -o Results/ALL.boot.dist -n_threads 4 -n_boot_rep 20 -boot_block_size 20 &> /dev/null
+```
+which will generate 20 replicates by randomly sampling with replacemente blocks of 20 SNPs (since we called SNPs earlier, otherwise will indicate the genomic length).
+Again, we can plot these results on a form of a tree:
+```
+$FASTME -D 21 -i Results/ALL.boot.dist -o Results/ALL.boot.tree -m b -n b &> /dev/null
+Rscript $NGSTOOLS/Scripts/plotTreeBoots.R Results/ALL.boot.tree
+evince Results/ALL.boot.tree.pdf
+```
+with boostrapped values shown on branches.
+Please note that we specifiy 21 tree in FASTME as the output file consists of the original tree plus the 20 boostrapped replicates.
+
+From these calculated genetics distances (not the boostrapped ones), we can also perform a MDS analysis and investigate the population genetic structure of our samples.
 ```
 NSAMPLES=30
 tail -n +3 Results/ALL.dist | head -n $NSAMPLES | Rscript --vanilla --slave $NGSTOOLS/Scripts/getMDS.R --no_header --data_symm -n 4 -m "mds" -o Results/ALL.mds &> /dev/null
@@ -713,7 +728,7 @@ Have a look at the output file.
 ```
 $ANGSD/misc/realSFS print Results/PEL.saf.idx | less -S
 ```
-These values represent the sample allele frequency likelihoods at each site, as seen during the lecture.
+These values represent the sample allele frequency likelihoods at each site.
 So the first value (after the chromosome and position columns) is the likelihood of having 0 copies of the derived allele, the second indicates the probability of having 1 copy and so on.
 Note that these values are in log format and scaled so that the maximum is 0.
 
@@ -721,7 +736,7 @@ The next step would be to use these likelihoods and estimate the overall SFS.
 This is achieved by the program `realSFS`.
 ```
 $ANGSD/misc/realSFS
-	-> ---./realSFS------
+-> ---./realSFS------
 	-> EXAMPLES FOR ESTIMATING THE (MULTI) SFS:
 
 	-> Estimate the SFS for entire genome??
@@ -743,12 +758,15 @@ $ANGSD/misc/realSFS
 
 	-> See realSFS print for possible print options
 	-> Use realSFS print_header for printing the header
+	-> Use realSFS cat for concatenating saf files
 
 	->------------------
 	-> NB: Output is now counts of sites instead of log probs!!
 	-> NB: You can print data with ./realSFS print afile.saf.idx !!
-	-> NB: Higher order SFS can be estimated by simply supplying multiple .saf.idx files!!
-	-> NB: Program uses accelerated EM, to use standard EM supply -m 0
+	-> NB: Higher order SFS's can be estimated by simply supplying multiple .saf.idx files!!
+	-> NB: Program uses accelerated EM, to use standard EM supply -m 0 
+	-> Other subfunctions saf2theta, cat, check
+
 ```
 
 This command will estimate the SFS for each population:
@@ -777,8 +795,27 @@ However, for practical reasons, here we could not use large genomic regions.
 
 You can plot the SFS for each pop using this simple R script.
 ```
-Rscript $NGSTOOLS/Scripts/plotSFS.R Results/LWK.sfs Results/TSI.sfs Results/PEL.sfs
-evince Results/LWK_TSI_PEL.pdf
+Rscript $NGSTOOLS/Scripts/plotSFS.R Results/LWK.sfs-Results/TSI.sfs-Results/PEL.sfs LWK-TSI-PEL 0 Results/ALL.sfs.pdf
+evince Results/ALL.sfs.pdf
+```
+where the second parameter is the labels for each population and the third parameter 0 is a boolean whether the SFS should be folded (1) or not (0).
+Since we provide an ancestral sequence here we can plot the unfolded spectrum.
+
+If, on the other hand, we don't provide an ancestral sequence, we can use the reference sequence to polarise our results and the fold the spectrum afterwards.
+This can be achieved, for instance, with the following lines:
+```
+for POP in LWK TSI PEL
+do
+        echo $POP
+        $ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $REF -out Results/${POP}.ref -r 11 \
+                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+                -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
+                -GL 1 -doSaf 1 &> /dev/null
+	$ANGSD/misc/realSFS Results/$POP.ref.saf.idx -P 4 2> /dev/null > Results/$POP.ref.sfs
+	
+done
+Rscript $NGSTOOLS/Scripts/plotSFS.R Results/LWK.ref.sfs-Results/TSI.ref.sfs-Results/PEL.ref.sfs LWK-TSI-PEL 1 Results/ALL.ref.sfs.pdf
+evince Results/ALL.ref.sfs.pdf
 ```
 
 It is sometimes convenient to generate bootstrapped replicates of the SFS, by sampling with replacements genomic segments.
@@ -792,8 +829,7 @@ This command may take some time.
 The output file has one line for each boostrapped replicate.
 
 It is very useful to estimate a multi-dimensional SFS, for instance the joint SFS between 2 populations (2D).
-This can be used for making inferences on their divergence process (time, migration rate and so on).
-Later we will use the 2D-SFS as prior information for our estimating population genetic differentiation.
+This can be used for making inferences on their divergence process (time, migration rate and so on) or even used as prior information for estimating population genetic differentiation.
 
 An important issue when doing this is to be sure that we are comparing the exactly same corresponding sites between populations.
 ANGSD does that automatically and considers only a set of overlapping sites.
@@ -801,7 +837,6 @@ The 2D-SFS between all populations and PEL, for instance, are computed with:
 ```
 for POP in LWK TSI
 do
-        echo $POP
 	$ANGSD/misc/realSFS -P 4 Results/$POP.saf.idx Results/PEL.saf.idx 2> /dev/null > Results/$POP.PEL.sfs
 done
 ```
@@ -810,21 +845,46 @@ while beteen LWK and TSI is:
 $ANGSD/misc/realSFS -P 4 Results/LWK.saf.idx Results/TSI.saf.idx 2> /dev/null > Results/LWK.TSI.sfs
 ```
 
-The output file is a flatten matrix, where each value is the count of sites with the corresponding joint frequency ordered as [0,0] [0,1] and so on.
+The output file is a flatten matrix, where each value is the count of sites with the corresponding joint frequency ordered as [0,0] [0,1] [0,2] ... [1,0] [1,1] ... and so on until [20, 20] (assuming 10 diploids per population).
 ```
 less -S Results/LWK.PEL.sfs
 ```
-You can plot it, but you need to define how many samples you have per population.
+You can plot it, but you need to define how many individuals you have per population (please note that this script assumes that your samples are diploid):
 ```
-Rscript $NGSTOOLS/Scripts/plot2DSFS.R Results/LWK.PEL.sfs 20 20
+Rscript $NGSTOOLS/Scripts/plot2DSFS.R Results/LWK.PEL.sfs LWK-PEL 10-10
 evince Results/LWK.PEL.sfs.pdf
 ```
+This script masks the non-variant cells and it is based on unfolded data.
+At this stage, it should not be used for folded data.
 
 You can even estimate SFS with higher order of magnitude (more than 2 populations).
-This command may take some time.
+This command may take some time (and should be run on a much larger genomic region).
 ```
 $ANGSD/misc/realSFS -P 4 Results/LWK.saf.idx Results/TSI.saf.idx Results/PEL.saf.idx 2> /dev/null > Results/LWK.TSI.PEL.sfs
 ```
+
+There is an (unsupported) routine to generate a plot for a 3D-SFS.
+You need install the following program:
+```
+cd ~/Software # or go to wherever you installed your programs
+git clone https://github.com/lpmdiaz/pop3D
+cd pop3D
+mkdir bin
+make
+```
+Now go back to where you are running this tutorial and add:
+```
+POP3D=~/Software/pop3D
+```
+You can now plot the 3D-SFS with the lines (where 10 is the number of individuals per population and 1 is the window to consider, as we are not doing a sliding-windows scan):
+```
+$POP3D/bin/parse3Dsfs Results/LWK.TSI.PEL.sfs Results/ALL.parsed3Dsfs 10 10 10 1
+Rscript $POP3D/scripts/plot3Dsfs.R Results/ALL.parsed3Dsfs Results/ALL.3Dsfs
+evince Results/ALL.3Dsfs.pdf
+```
+The interactive session is not fully supported.
+Please note that frequencies are in log scale.
+
 
 ## Population genetic differentiation (FST/PBS)
 
@@ -837,7 +897,7 @@ Specifically, we are computing a slinding windows scan, with windows of 50kbp an
 This can be achieved using the following commands.
 This first command computes per-site FST indexes:
 ```
-$ANGSD/misc/realSFS fst index Results/LWK.saf.idx Results/TSI.saf.idx Results/PEL.saf.idx -sfs Results/LWK.TSI.sfs -sfs Results/LWK.PEL.sfs -sfs Results/TSI.PEL.sfs -fstout Results/PEL.pbs &> /dev/null
+$ANGSD/misc/realSFS fst index Results/LWK.saf.idx Results/TSI.saf.idx Results/PEL.saf.idx -sfs Results/LWK.TSI.sfs -sfs Results/LWK.PEL.sfs -sfs Results/TSI.PEL.sfs -fstout Results/PEL.pbs -whichFST 1 &> /dev/null
 ```
 and you can have a look at their values:
 ```
@@ -848,7 +908,7 @@ Note that FST on multiple SNPs is calculated as sum(a)/sum(a+b).
 
 Then, the next command performs a sliding-window analysis
 ```
-$ANGSD/misc/realSFS fst stats2 Results/PEL.pbs.fst.idx -win 50000 -step 10000 > Results/PEL.pbs.txt
+$ANGSD/misc/realSFS fst stats2 Results/PEL.pbs.fst.idx -win 50000 -step 10000 -whichFST 1 > Results/PEL.pbs.txt
 ```
 
 You can have a look at the output file:
@@ -868,8 +928,8 @@ Please note that if you give only 2 populations in input, only the FST will be c
 Therefore, FST between a pair of populations can calculated by repeating the steps above by using only 2 .saf.idx input files.
 For instance, FST between LWK and TSI is achieved with:
 ```
-$ANGSD/misc/realSFS fst index Results/LWK.saf.idx Results/TSI.saf.idx -sfs Results/LWK.TSI.sfs -fstout Results/LWK.TSI
-$ANGSD/misc/realSFS fst stats2 Results/LWK.TSI.fst.idx -win 50000 -step 10000 > Results/LWK.TSI.fst.txt
+$ANGSD/misc/realSFS fst index Results/LWK.saf.idx Results/TSI.saf.idx -sfs Results/LWK.TSI.sfs -fstout Results/LWK.TSI -whichFST 1
+$ANGSD/misc/realSFS fst stats2 Results/LWK.TSI.fst.idx -win 50000 -step 10000 -whichFST 1 > Results/LWK.TSI.fst.txt
 less -S Results/LWK.TSI.fst.txt
 ```
 
@@ -896,15 +956,14 @@ do
 done
 ```
 
-Then we need to index thess file and perform a sliding windows analysis using a window length of 50kbp and a step size of 10kbp.
+Then we need to index these file and perform a sliding windows analysis using a window length of 50kbp and a step size of 10kbp, as an example (note that the option -cChr is twice the number of diploid individuals).
 ```
 for POP in LWK TSI PEL
 do
 	echo $POP
-	# index files
-	$ANGSD/misc/thetaStat make_bed Results/$POP.thetas.gz &> /dev/null
+	$ANGSD/misc/thetaStat do_stat Results/$POP.thetas.idx &> /dev/null
 	# perform a sliding-window analysis
-	$ANGSD/misc/thetaStat do_stat Results/$POP.thetas.gz -nChr 40 -win 50000 -step 10000 -outnames Results/$POP.thetas &> /dev/null
+	$ANGSD/misc/thetaStat do_stat Results/$POP.thetas.idx -win 50000 -step 10000 -outnames Results/$POP.thetas &> /dev/null
 done
 ```
 Values in this output file are the sum of the per-site estimates for the whole window.
@@ -950,20 +1009,18 @@ do
                 -GL 1 -doMajorMinor 5 -doMaf 1 -skipTriallelic 1 \
                 -sites Data/snps.txt &> /dev/null
 done
-```
-Inspect the results.
-```
 zcat Results/LWK.mafs.gz Results/TSI.mafs.gz Results/PEL.mafs.gz
 ```
 
 Summary statistics using ngsTools
 -----------------------------------
 
-IMPORTANT NOTE: we recommend the use of ANGSD to calculate summary statistics. While the rationale behing these estimations are very similar with ngsTools, ANGSD provides a much better implementation.
+VERY IMPORTANT NOTE: we recommend the use of ANGSD to calculate summary statistics. 
+While the rationale behind these estimations are very similar with ANGSD and ngsTools, ANGSD provides a much better implementation of them.
 
 Most of the summary statistics can be now estimated using ANGSD using the commands described above.
 For the sake of completeness, here we show how we can perform similar analyses using ngsTools, although ANGSD may be faster and require less memory than ngsTools.
-Note that the methods behind how ANGSD and ngsTools estimate such quantities are very similar.
+Note that the methods behind how ANGSD and ngsTools estimate such quantities are very similar (but results may differ slightly).
 
 ## Population genetic differentiation (FST)
 
@@ -984,8 +1041,8 @@ Unlike in ANGSD, here we first need to get the subset of overlapping sites (unfi
 ```
 	$ANGSD/misc/realSFS print Results/TSI.saf.idx Results/PEL.saf.idx | cut -f 1-2 > Data/intersect.txt
 	$ANGSD/angsd sites index Data/intersect.txt
-	N_SITES=`wc -l Data/intersect.txt | cut -f 1 -d " "`
-	echo $N_SITES
+	NSITES=`wc -l Data/intersect.txt | cut -f 1 -d " "`
+	echo $NSITES
 ```
 
 We then compute the sample allele frequency likelihoods only for the overlapping (valid) sites.
@@ -1003,10 +1060,10 @@ done
 
 We then estimate the 2D-SFS to be used as prior using ngsTools.
 ```
-    N_SITES=`wc -l Data/intersect.txt | cut -f 1 -d " "` # if not already done
-    zcat Results/TSI.saf.gz > Results/TSI.saf
-    zcat Results/PEL.saf.gz > Results/PEL.saf
-    $NGSTOOLS/ngsPopGen/ngs2dSFS -postfiles Results/TSI.saf Results/PEL.saf -outfile Results/TSI.PEL.2dsfs -nind 20 20 -nsites $N_SITES -maxlike 1 -relative 1
+NSITES=`wc -l Data/intersect.txt | cut -f 1 -d " "` # if not already done
+zcat Results/TSI.saf.gz > Results/TSI.saf
+zcat Results/PEL.saf.gz > Results/PEL.saf
+$NGSTOOLS/ngsPopGen/ngs2dSFS -postfiles Results/TSI.saf Results/PEL.saf -outfile Results/TSI.PEL.2dsfs -nind 10 10 -nsites $NSITES -maxlike 1 -relative 1
 ```
 The output is a matrix giving the proportion of sites with a given joint allele frequency.
 
@@ -1017,31 +1074,33 @@ Recalling what previously shown, the command is (note that -sites option is kept
 ```
 $ANGSD/misc/realSFS -P 4 Results/TSI.saf.idx Results/PEL.saf.idx -sites Data/intersect.txt 2> /dev/null > Results/TSI.PEL.sfs
 ```
-You need to convert this file into the input file for ngsTools (note that you need to specify the sample size for both populations):
+If you want to use this 2D-SFS calculated by ANGSD, then you need to convert it into the input file for ngsTools (note that you need to specify the number of individuals for both populations):
 ```
-Rscript $NGSTOOLS/Scripts/convertSFS.R Results/TSI.PEL.sfs 20 20 > Results/TSI.PEL.angsd.2dsfs
+Rscript $NGSTOOLS/Scripts/SFSangsd2tools.R Results/TSI.PEL.sfs 10 10 > Results/TSI.PEL.angsd.2dsfs
 ```
 
-We can now calculate per-site FST values.
+We can now calculate per-site FST values (using for instance the 2D-SFS calculated by ANGSD).
 ```
-	$NGSTOOLS/ngsPopGen/ngsFST -postfiles Results/TSI.saf Results/PEL.saf -priorfile Results/TSI.PEL.angsd.2dsfs -nind 20 20 -nsites $N_SITES -outfile Results/TSI.PEL.fst
+$NGSTOOLS/ngsPopGen/ngsFST -postfiles Results/TSI.saf Results/PEL.saf -priorfile Results/TSI.PEL.angsd.2dsfs -nind 10 10 -nsites $NSITES -outfile Results/TSI.PEL.fst
 ```
-The output has the following header: a, (a+b), correcting factor, FST, probability of being variable.
+The output has the following header: a, (a+b), correcting factor (you can ignore this), FST, probability of being variable.
 Note that FST is equal (ignoring the correcting factor) to a/(a+b), and multiple-sites estimates are sum(a)/sum(a+b).
 Also note that negative FST values mean FST equal to 0. 
-Very large negative values are simply due to numerical corrections and they tend to appear when a site is very unlikely to be variable.
+Very large negative or positive per-site values are simply due to numerical corrections and they tend to appear when a site is highly unlikely to be variable.
+These will not affect multiple-sites estimates and can be safely ignored.
 
 These example scripts will produce a plot and text file with sliding windows values (size of 50kbp, step of 10kbp).
-Note that, as an illustration, we also filter out sites with a probability of being variable less than 0.90.
+Note that, as an illustration, we also filter out sites with a probability of being variable less than 0.90, although other options are valid too.
 ```
-    Rscript $NGSTOOLS/Scripts/plotFST.R -i Results/TSI.PEL.fst -o Results/TSI.PEL.scan.fst -p Data/intersect.txt -w 50000 -s 10000 -t 0.90
-    less -S Results/TSI.PEL.scan.fst.txt
-    evince Results/TSI.PEL.scan.fst.pdf
+Rscript $NGSTOOLS/Scripts/plotFST.R -i Results/TSI.PEL.fst -o Results/TSI.PEL.scan.fst -p Data/intersect.txt -w 50000 -s 10000 -t 0.90
+less -S Results/TSI.PEL.scan.fst.txt
+evince Results/TSI.PEL.scan.fst.pdf
 ```
 
 ## Nucleotide diversity
 
-We use the sample allele frequency probabilities (.saf files) calculated on the previous step and estimate the marginal SFS to be used as priors.
+We use the sample allele frequency probabilities (.saf files) calculated on previous steps and estimate the marginal SFS to be used as priors.
+Again, you might have already calculated these SFS and the -sites option is not really necessary but it is kept for consistency.
 ```
 for POP in LWK TSI PEL
 do
@@ -1050,38 +1109,26 @@ do
 done
 ```
 
-From these priors, we calculate the sample allele frequency posterior probabilities for each population.
-```
-for POP in LWK TSI PEL
-do
-        echo $POP
-        $ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP -r 11 \
-                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
-                -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
-                -GL 1 -doSaf 1 -pest Results/$POP.sfs \
-                -sites Data/intersect.txt &> /dev/null
-done
-```
-
-Assuming we are interested in LWK and PEL, we can now calculate some summary statistics, namely number of segregating sites, expected heterozygosity, number of fixed differences and dxy.
-Please note that the latter 2 statistics have not been properly tested. 
-
+Assuming we are interested in TSI and PEL, we can now calculate some summary statistics, namely number of segregating sites, expected heterozygosity, number of fixed differences and dxy.
+Please note that the latter 2 statistics have not been properly tested and they are shown to be 
 For instance, dxy been shown to be over-estimated and should be used only for inspecting the distribution and not to make inferences based on its absolute values.
-In case you want to estimate dxy, you can find in `ngsTools/ngsPopGen/scripts` folder a perl script written by [Nagarjun Vijay](https://lsa.umich.edu/eeb/people/postdoctoral-fellows/nagarju.html) and a R script written by [Joshua Penalba][https://joshuapenalba.com/] which calculate Dxy from ANGSD allele frequency files. Please see the script for help.
+In case you want to estimate dxy, you can find in `ngsTools/ngsPopGen/scripts` folder a perl script written by [Nagarjun Vijay](https://lsa.umich.edu/eeb/people/postdoctoral-fellows/nagarju.html) and a R script written by [Joshua Penalba][https://joshuapenalba.com/] which calculate Dxy from ANGSD allele frequency files. Please see that script for additional help.
 
+We can estimate summary statistics for two populations with:
 ```
-zcat Results/LWK.saf.gz > Results/LWK.saf
+zcat Results/TSI.saf.gz > Results/TSI.saf
 zcat Results/PEL.saf.gz > Results/PEL.saf
-$NGSTOOLS/ngsPopGen/ngsStat -npop 2 -postfiles Results/LWK.saf Results/PEL.saf -nsites $N_SITES -nind 20 20 -outfile Results/LWK.PEL.stats.txt
+NSITES=`wc -l Data/intersect.txt | cut -f 1 -d " "` # if not already done
+$NGSTOOLS/ngsPopGen/ngsStat -npop 2 -postfiles Results/TSI.saf Results/PEL.saf -nsites $NSITES -nind 10 10 -outfile Results/TSI.PEL.stats.txt
 ```
-whether if you are interested in only one population the command would be:
+while if we are interested in only one population the command would be:
 ```
-$NGSTOOLS/ngsPopGen/ngsStat -npop 1 -postfiles Results/PEL.saf -nsites $N_SITES -nind 20 -outfile Results/PEL.stats.txt
+$NGSTOOLS/ngsPopGen/ngsStat -npop 1 -postfiles Results/PEL.saf -nsites $NSITES -nind 10 -outfile Results/PEL.stats.txt
 ```
 
 Have a look at the output files:
 ```
-less -S Results/LWK.PEL.stats.txt
+less -S Results/TSI.PEL.stats.txt
 less -S Results/PEL.stats.txt
 ```
 The output file (for a 2-populations analysis) has the following header: position start, position end, segregating sites (pop 1), heterozygosity (pop 1), segregating sites (pop 2), heterozygosity (pop 2), fixed differences, dxy.
@@ -1089,20 +1136,19 @@ If only 1 population is analysed, this is the header: position start, position e
 
 These example scripts will produce a plot and text file with sliding windows values, for 2 populations and only 1 population.
 ```
-	Rscript $NGSTOOLS/Scripts/plotSS.R -i Results/LWK.PEL.stats.txt -p Data/intersect.txt -o Results/LWK.PEL.scan.stats -n LWK-PEL -w 50000 -s 10000
-	Rscript $NGSTOOLS/Scripts/plotSS.R -i Results/PEL.stats.txt -p Data/intersect.txt -o Results/PEL.scan.stats -n PEL -w 50000 -s 10000
-	less -S Results/LWK.PEL.scan.stats.txt
-	less -S Results/PEL.scan.stats.txt
-	evince Results/LWK.PEL.scan.stats.pdf
-	evince Results/PEL.scan.stats.pdf
+Rscript $NGSTOOLS/Scripts/plotSS.R -i Results/TSI.PEL.stats.txt -p Data/intersect.txt -o Results/TSI.PEL.scan.stats -n TSI-PEL -w 50000 -s 10000
+Rscript $NGSTOOLS/Scripts/plotSS.R -i Results/PEL.stats.txt -p Data/intersect.txt -o Results/PEL.scan.stats -n PEL -w 50000 -s 10000
+less -S Results/TSI.PEL.scan.stats.txt
+less -S Results/PEL.scan.stats.txt
+evince Results/TSI.PEL.scan.stats.pdf
+evince Results/PEL.scan.stats.pdf
 ```
-
 
 Additional help
 -----------------------------
 
 Further information and more example can be found at the individual web page for [ANGSD](http://popgen.dk/wiki/index.php/ANGSD).
 Also, [ANGSD-wrapper](https://github.com/mojaveazure/angsd-wrapper) is a utility to run ANGSD and ngsTools developed by the [Ross-Ibarra Lab](http://www.rilab.org/) at UC Davis.
-Please contact [me](https://iris.ucl.ac.uk/iris/browse/profile?upi=MFUMA31) for questions and feedback on this tutorial.
+Please contact [me](https://www.imperial.ac.uk/people/m.fumagalli) for questions and feedback on this tutorial.
 
 

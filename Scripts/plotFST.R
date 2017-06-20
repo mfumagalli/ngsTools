@@ -27,60 +27,58 @@ cat("After removing non-variable (based on your -th value) sites, now there are"
 cat("Overall FST:",sum(values[,1])/sum(values[,2]),"\n");
 
 # how many chroms?
-uc=sort(unique(pos$V1))
-cpos=cbind(pos, V3=rep(0, nrow(pos)))
+uc <- sort(unique(pos$V1))
+cpos <- cbind(pos, V3=rep(0, nrow(pos)))
 rm(pos)
 
 # set cumulative positions for plotting purpose
 cpos$V3[which(cpos$V1==uc[1])]=cpos$V2[which(cpos$V1==uc[1])]
 if (length(uc)>1) {
 	for (i in 2:length(uc)){
-		offset=max(as.numeric(as.character(cpos$V3)), na.rm=T)+1e5
-		cpos$V3[which(cpos$V1==uc[i])]=cpos$V2[which(cpos$V1==uc[i])]+offset
+		offset <- max(as.numeric(as.character(cpos$V3)), na.rm=T)+1e5
+		cpos$V3[which(cpos$V1==uc[i])] <- cpos$V2[which(cpos$V1==uc[i])]+offset
 	}
 }
 
 # plot
-win=as.numeric(opt$window);
-step=as.numeric(opt$step);
+win <- as.numeric(opt$window);
+step <- as.numeric(opt$step);
 
 # if no window scan, assign each value
-values$V4[values$V4<0]=0
-values$V4[values$V4>1]=NA
+values$V4[values$V4<0] <- 0
+values$V4[values$V4>1] <- NA
 if (opt$window==1) {
 
-	df=data.frame(cbind(Chrom=cpos[,1], Pos=cpos[,2], cum_Pos=cpos[,3], Value=values[,4]));
-	df$Chrom=factor(df$Chrom, levels=uc)
-	df[,2:4]=sapply(df[,2:4], as.character)
-	df[,2:4]=sapply(df[,2:4], as.numeric)
+	df <- data.frame(cbind(Chrom=cpos[,1], Pos=cpos[,2], cum_Pos=cpos[,3], Value=values[,4]));
+	df$Chrom <- factor(df$Chrom, levels=uc)
+	df[,2:4] <- sapply(df[,2:4], as.character)
+	df[,2:4] <- sapply(df[,2:4], as.numeric)
 
 
 } else {
-	fst=wpos=wwpos=c()
+	fst <- wpos <- wwpos <- c()
 	# Windows
 	for (i in uc) {
-		indi=which(cpos[,1]==i)
-		start=seq(min(cpos[indi,3]), max(cpos[indi,3]), step);
-		end=start+win-1;
-		cchrom=rep(i, length(start))
-		wpos=c(wpos,round(start+(win/2))); # position of the window in the plot (center)
+		indi <- which(cpos[,1]==i)
+		start <- seq(min(cpos[indi,3]), max(cpos[indi,3]), step);
+		end <- start+win-1;
+		cchrom <- rep(i, length(start))
+		wpos <- c(wpos,round(start+(win/2))); # position of the window in the plot (center)
 		for (j in 1:length(start)) {
-			ipos=which(cpos[,3]>=start[j] & cpos[,3]<=end[j])
-			fst=c(fst,sum(values[ipos,1])/sum(values[ipos,2]))
+			ipos <- which(cpos[,3]>=start[j] & cpos[,3]<=end[j])
+			fst <- c(fst,sum(values[ipos,1])/sum(values[ipos,2]))
 		}
-		start=seq(min(cpos[indi,2]), max(cpos[indi,2]), step);
-                end=start+win-1;
-                wwpos=c(wwpos,round(start+(win/2)));
+		start <- seq(min(cpos[indi,2]), max(cpos[indi,2]), step);
+                end <- start+win-1;
+                wwpos <- c(wwpos,round(start+(win/2)));
 	}
 
-	fst[which(fst<0)]=0
+	fst[which(fst<0)] <- 0
 
-	df=data.frame(cbind(Chrom=cchrom, Pos=wwpos, cum_Pos=wpos, Value=fst));
-        df$Chrom=factor(df$Chrom, levels=uc)
-        df[,2:4]=sapply(df[,2:4], as.character)
-        df[,2:4]=sapply(df[,2:4], as.numeric)
-
-
+	df <- data.frame(cbind(Chrom=cchrom, Pos=wwpos, cum_Pos=wpos, Value=fst));
+        df$Chrom <- factor(df$Chrom, levels=uc)
+        df[,2:4] <- sapply(df[,2:4], as.character)
+        df[,2:4] <- sapply(df[,2:4], as.numeric)
 
 }
 

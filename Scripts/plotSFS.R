@@ -1,16 +1,15 @@
 
 # from ANGSD website, adapted
-# this is written knowning that the path is Results/
 
 args <- commandArgs(T)
 fins <- unlist(strsplit(args[1], split="-"))
 pops <- unlist(strsplit(args[2], split="-"))
 fold <- as.numeric(args[3])
 fout <- args[4]
-print(args)
 rm(args)
 
 cat("Populations:", pops, "\n")
+cat("Maximum frequency: ")
 
 #function to normalize
 norm <- function(x) x/sum(x)
@@ -63,7 +62,7 @@ xlab <- "Derived allele frequency"
 if (fold) xlab <- "Minor allele frequency"
 barplot(msfs, beside=T, legend=pvars, xlab=xlab, names=1:ncol(msfs), ylab="Proportions", main="SFS")
 
-dev.off()
+invisible(dev.off())
 
-
+cat("\n")
 

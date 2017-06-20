@@ -39,7 +39,7 @@ barplot(admix, col=cbPalette[1:K], space=0, border=NA, xlab="Individuals", ylab=
 #h<-barplot(admix,col=1:3,space=0,border=NA,xlab="Individuals",ylab="admixture")
 #text(tapply(1:nrow(pop),pop[,1],mean),-0.05,unique(pop[,1]),xpd=T)
 
-dev.off()
+invisible(dev.off())
 
 
 
