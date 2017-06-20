@@ -29,16 +29,16 @@ Packages
 * [ngsF](https://github.com/fgvieira/ngsF) - This program provides a method to estimate individual inbreeding coefficients using an EM algorithm ([Vieira et al., 2013](http://www.ncbi.nlm.nih.gov/pubmed/23950147)). These can provide insight into a population's mating system or demographic history and, more importantly, they can be used as a prior in ANGSD.
 
 * [ngsPopGen](https://github.com/mfumagalli/ngsPopGen) - Several tools to perform population genetic analyses from NGS data ([Fumagalli et al., 2013](http://www.ncbi.nlm.nih.gov/pubmed/23979584), [Fumagalli, 2013](http://www.ncbi.nlm.nih.gov/pubmed/24260275)).
- ** __ngsFst__ - Quantifying population genetic differentiation
- ** __ngsCovar__ - Population structure via PCA (principal components analysis)
- ** __ngs2dSFS__ - Estimate 2D-SFS from posterior probabilities of sample allele frequencies
- ** __ngsStat__ - Estimate number of segregating sites, expected average heterozygosity and other nucleotide diversity indexes
+	* __ngsFst__ - Quantifying population genetic differentiation
+	* __ngsCovar__ - Population structure via PCA (principal components analysis)
+	* __ngs2dSFS__ - Estimate 2D-SFS from posterior probabilities of sample allele frequencies
+	* __ngsStat__ - Estimate number of segregating sites, expected average heterozygosity and other nucleotide diversity indexes
 
-* [ngsUtils](https://github.com/mfumagalli/ngsUtils) - General tools to manipulate data.
- ** __GetMergedGeno__ - Merge genotype posterior probabilities files
- ** __GetSubGeno__ - Select a subset of genotype posterior probabilities files
- ** __GetSubSim__ - Select a subset of simulated data files
- ** __GetSwitchedGeno__ - Switch major/minor in genotype posterior probabilities files
+* [ngsUtils](https://github.com/mfumagalli/ngsUtils) - General tools to manipulate data produced by ngsTools.
+	* __GetMergedGeno__ - Merge genotype posterior probabilities files
+	* __GetSubGeno__ - Select a subset of genotype posterior probabilities files
+	* __GetSubSim__ - Select a subset of simulated data files
+	* __GetSwitchedGeno__ - Switch major/minor in genotype posterior probabilities files
 
 * [ngsDist](https://github.com/fgvieira/ngsDist) is a program that estimates genetic distances for phylogenetic analyses from genotype posterior probabilities ([Vieira et al., 2016](http://onlinelibrary.wiley.com/doi/10.1111/bij.12511/abstract)).
 
