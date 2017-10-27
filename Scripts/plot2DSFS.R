@@ -10,7 +10,7 @@ nPops <- as.numeric(unlist(strsplit(args[3], split="-")))*2
 rm(args)
 
 ANGSD.2D.SFS <- scan(paste(fin, sep=""), quiet=T)
-ANGSD.2D.SFS <- t(matrix(ANGSD.2D.SFS, nrow=nPops[1]+1, ncol=nPops[2]+1))
+ANGSD.2D.SFS <- t(matrix(ANGSD.2D.SFS, nrow=nPops[2]+1, ncol=nPops[1]+1))
 
 # mask non-variant sites
 ANGSD.2D.SFS[1,1] <- 0
