@@ -22,3 +22,6 @@
 [submodule "ngsF-HMM"]
 	path = ngsF-HMM
 	url = https://github.com/fgvieira/ngsF-HMM.git
+[submodule "ngsLD"]
+	path = ngsLD
+	url = https://github.com/fgvieira/ngsLD.git
