@@ -2,7 +2,7 @@
 export HTSSRC=../htslib/
 
 EXT = htslib angsd
-TOOLS = ngsSim ngsPopGen ngsUtils ngsDist ngsF ngsF-HMM
+TOOLS = ngsSim ngsPopGen ngsUtils ngsDist ngsLD ngsF ngsF-HMM
 
 all: $(EXT) $(TOOLS)
 
