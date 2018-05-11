@@ -15,7 +15,7 @@ __ngsTools__ is a collection of programs for population genetics analyses from N
 The methods implemented in these programs do not rely on SNP or genotype calling, and are particularly suitable for low sequencing depth data. 
 An application note illustrating its application has published ([Fumagalli et al., 2014](http://www.ncbi.nlm.nih.gov/pubmed/24458950)).
 
-NOTE - this repository is intended for general use as it groups together the latest stable version of each tool. 
+__NOTE__: this repository is intended for general use as it groups together the latest stable version of each tool. 
 Developers (and only them) may want to check each tool's main repository.
 
 
@@ -52,44 +52,52 @@ Installation
 
 `ngsTools` can be easily installed but some packages have some external dependencies:
 
-* `gcc` : v4.9.2 tested on Debian 7.8 (wheezy)
-* `zlib`: v1.2.7 tested on Debian 7.8 (wheezy)
-* `gsl` : v1.15 tested on Debian 7.8 (wheezy)
-* `md5sum`: only needed for `make test`
+* Mandatory:
+  * `gcc`: >= 4.9.2 tested on Debian 7.8 (wheezy)
+  * `zlib`: v1.2.7 tested on Debian 7.8 (wheezy)
+  * `gsl` : v1.15 tested on Debian 7.8 (wheezy)
+* Optional (only needed for testing or auxilliary scripts):
+  * `md5sum`
+  * `samtools`
+  * `Perl` packages: `Getopt::Long`, `Graph::Easy`, `Math::BigFloat`, and `IO::Zlib`
+  * `R` packages: `optparse`, `tools`, `ggplot2`, `reshape2`, `plyr`, `gtools`, `LDheatmap`, `ape`, `grid`, `methods`, `phangorn`, and `plot3D`
 
 To download ngsTools and its submodules use:
-```
-git clone --recursive https://github.com/mfumagalli/ngsTools.git
-```
+
+    % git clone --recursive https://github.com/mfumagalli/ngsTools.git
+
 If you prefer, although it is not recomended, you can download a zipped folder on the right side of this page ("Download ZIP"). 
 
 To install these tools just run:
-```
-cd ngsTools
-make
-```
-Executables are built into each tool directory in the repository. 
-If you wish to clean all binaries and intermediate files:
-```
-make clean
-```
+
+    % cd ngsTools
+    % make
+
+To run the tests:
+
+    % make test
+
+Executables are built into each tool directory in the repository. If you wish to clean all binaries and intermediate files:
+
+    % make clean
+
 To get the latest version of ngsTools package:
-```
-git pull
-git submodule update
-```    
-NOTE for developers only: if you wish to make changes and update the whole package:
-```
-# in the modified repo
-# be sure to be on the master branch: git checkout master
-git commit -a -m 'Local changes...'
-git push
-# in ngsTools main repo
-git commit -a -m 'Submodules updated'
-git push
-# check that everything went well: 
-git status
-```
+
+    % git pull
+    % git submodule update
+
+__NOTE__: for developers only: if you wish to make changes and update the whole package:
+
+    # in the modified repo
+    # be sure to be on the master branch: git checkout master
+    % git commit -a -m 'Local changes...'
+    % git push
+    # in ngsTools main repo
+    % git commit -a -m 'Submodules updated'
+    % git push
+    # check that everything went well: 
+    % git status
+
 
 Input Files
 -----------------------------------
