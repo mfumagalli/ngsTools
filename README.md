@@ -56,6 +56,9 @@ Installation
   * `gcc`: >= 4.9.2 tested on Debian 7.8 (wheezy)
   * `zlib`: v1.2.7 tested on Debian 7.8 (wheezy)
   * `gsl` : v1.15 tested on Debian 7.8 (wheezy)
+  * `libbz2.so`, required by **htslib**
+  * `liblzma.so`, required by **htslib**
+  * `libcurl.so`, required by **angsd**
 * Optional (only needed for testing or auxilliary scripts):
   * `md5sum`
   * `samtools`
