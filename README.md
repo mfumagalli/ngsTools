@@ -44,7 +44,7 @@ Packages
 
 * [ngsF-HMM](https://github.com/fgvieira/ngsF-HMM) is a program developed and written by F.G. Vieira to estimate per-individual inbreeding tracts using a two-state Hidden Markov Model ([Vieira et al. 2016](http://bioinformatics.oxfordjournals.org/content/32/14/2096)). It uses a probabilistic framework that takes the uncertainty of genotype's assignation into account; making it specially suited for low-quality or low-coverage datasets. It is not officially part of ngsTools so it must be installed separately.
 
-* [ngsLD](https://github.com/fgvieira/ngsLD) is a program that calculates pairwise Linkage Disequilibrium (LD) under a probabilistic framework ([Fox et al., 2018](http://onlinelibrary.wiley.com/doi/10.1111/bij.12511/abstract)).
+* [ngsLD](https://github.com/fgvieira/ngsLD) is a program that calculates pairwise Linkage Disequilibrium (LD) under a probabilistic framework ([Fox et al., 2018](https://doi.org/10.1093/bioinformatics/btz200)).
 
 
 Installation
