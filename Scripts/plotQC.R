@@ -21,16 +21,11 @@ cat("\nGlobal_depth\tpercentile\n", file=paste(fin,".info",sep="",collapse=""), 
 write.table( cbind(seq(1,length(dep))-1,cumsum(dep)/sum(dep)), row.names=F, col.names=F, quote=F, sep="\t", file=paste(fin,".info",sep="",collapse=""), append=T)
 
 ## sample depth
-deps <- read.table(paste(fin,".depthSample", sep="",collapse=""),head=F, stringsAsFactors=F)
+deps <- t(read.table(paste(fin,".depthSample", sep="",collapse=""),head=F, stringsAsFactors=F))
 ## per sample
-depp <- matrix(NA, nrow=nrow(deps), ncol=ncol(deps))
-for (i in 1:nrow(depp)) depp[i,] <- apply(X=deps[i,], FUN=sum, MAR=2)
-
-
-# this will plot only the first 'xl' bins of depth; change as appropriate
-xl <- 10
-barplot(depp[,1:xl], names.arg=c(seq(1,ncol(deps))-1)[1:xl], xlab="Sample Depth", ylab="Counts", beside=T)
+max_x <- 2 * nrow(deps)/ncol(deps)
+for (i in 1:ncol(deps)) {
+  barplot(height=deps[1:max_x,i], names.arg=seq(1,max_x)-1, xlab="Sample Depth", ylab="Counts")
+}
 
 invisible(dev.off())
-
-
