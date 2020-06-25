@@ -65,6 +65,8 @@ Installation
   * `Perl` packages: `Getopt::Long`, `Graph::Easy`, `Math::BigFloat`, and `IO::Zlib`
   * `R` packages: `optparse`, `tools`, `ggplot2`, `reshape2`, `plyr`, `gtools`, `LDheatmap`, `ape`, `grid`, `methods`, `phangorn`, and `plot3D`
 
+If you have issues with `gsl` package, then on linux make sure you have these packages installed: `gsl-bin` `libgsl-dbg` `libgsl-dev` `libgs1l23` `libgslcblas0`.
+
 To download ngsTools and its submodules use:
 
     % git clone --recursive https://github.com/mfumagalli/ngsTools.git
