@@ -9,11 +9,11 @@ This parameter is usually referred to as the sequencing depth.
 Individual genotypes are then inferred from the proportion of nucleotide bases covering each site after the reads have been aligned.
 
 Low sequencing depth and high error rates stemming from base calling and mapping errors can cause SNP (Single Nucleotide Polymorphism) and genotype calling from NGS data to be associated with considerable statistical uncertainty. 
-Probabilistic models, which take these errors into account, have been proposed to accurately assign genotypes and estimate allele frequencies (e.g. [Nielsen et al., 2012](http://www.ncbi.nlm.nih.gov/pubmed/22911679); for a review [Nielsen et al., 2011](http://www.ncbi.nlm.nih.gov/pubmed/21587300)).
+Probabilistic models, which take these errors into account, have been proposed to accurately assign genotypes and estimate allele frequencies (e.g. [Nielsen et al. 2012](http://www.ncbi.nlm.nih.gov/pubmed/22911679); for a review [Nielsen et al. 2011](http://www.ncbi.nlm.nih.gov/pubmed/21587300)).
 
 __ngsTools__ is a collection of programs for population genetics analyses from NGS data, taking into account data statistical uncertainty.
 The methods implemented in these programs do not rely on SNP or genotype calling, and are particularly suitable for low sequencing depth data. 
-An application note illustrating its application has published ([Fumagalli et al., 2014](http://www.ncbi.nlm.nih.gov/pubmed/24458950)).
+An application note illustrating its application has published ([Fumagalli et al. 2014](http://www.ncbi.nlm.nih.gov/pubmed/24458950)).
 
 __NOTE__: this repository is intended for general use as it groups together the latest stable version of each tool. 
 Developers (and only them) may want to check each tool's main repository.
@@ -40,11 +40,14 @@ Packages
 	* __GetSubSim__ - Select a subset of simulated data files
 	* __GetSwitchedGeno__ - Switch major/minor in genotype posterior probabilities files
 
-* [ngsDist](https://github.com/fgvieira/ngsDist) is a program that estimates genetic distances for phylogenetic analyses from genotype posterior probabilities ([Vieira et al., 2016](http://onlinelibrary.wiley.com/doi/10.1111/bij.12511/abstract)).
+* [ngsDist](https://github.com/fgvieira/ngsDist) is a program that estimates genetic distances from genotype posterior probabilities ([Vieira et al., 2016](http://onlinelibrary.wiley.com/doi/10.1111/bij.12511/abstract)).
 
-* [ngsF-HMM](https://github.com/fgvieira/ngsF-HMM) is a program developed and written by F.G. Vieira to estimate per-individual inbreeding tracts using a two-state Hidden Markov Model ([Vieira et al. 2016](http://bioinformatics.oxfordjournals.org/content/32/14/2096)). It uses a probabilistic framework that takes the uncertainty of genotype's assignation into account; making it specially suited for low-quality or low-coverage datasets. It is not officially part of ngsTools so it must be installed separately.
+* [ngsF-HMM](https://github.com/fgvieira/ngsF-HMM) is a program developed and written by F.G. Vieira to estimate per-individual inbreeding tracts using a two-state Hidden Markov Model ([Vieira et al. 2016](http://bioinformatics.oxfordjournals.org/content/32/14/2096)). It uses a probabilistic framework that takes the uncertainty of genotype's assignation into account; making it specially suited for low-quality or low-coverage datasets. It is not officially part of `ngsTools` so it must be installed separately.
 
-* [ngsLD](https://github.com/fgvieira/ngsLD) is a program that calculates pairwise Linkage Disequilibrium (LD) under a probabilistic framework ([Fox et al., 2018](https://doi.org/10.1093/bioinformatics/btz200)).
+* [ngsLD](https://github.com/fgvieira/ngsLD) is a program that calculates pairwise Linkage Disequilibrium (LD) under a probabilistic framework ([Fox et al., 2019](https://doi.org/10.1093/bioinformatics/btz200)).
+
+* [HMMploidy](https://github.com/SamueleSoraggi/HMMploidy) is a program written by S. Soraggi to infer ploidy levels from low-coverage sequencing data. It is not officially part of `ngsTools` so it must be installed separately.
+
 
 
 Installation
@@ -65,7 +68,7 @@ Installation
   * `Perl` packages: `Getopt::Long`, `Graph::Easy`, `Math::BigFloat`, and `IO::Zlib`
   * `R` packages: `optparse`, `tools`, `ggplot2`, `reshape2`, `plyr`, `gtools`, `LDheatmap`, `ape`, `grid`, `methods`, `phangorn`, and `plot3D`
 
-If you have issues with `gsl` package, then on linux make sure you have these packages installed: `gsl-bin` `libgsl-dbg` `libgsl-dev` `libgs1l23` `libgslcblas0`.
+If you have issues with `gsl` package, then on linux make sure you have these packages installed: `gsl-bin` `libgsl-dbg` `libgsl-dev` `libgslcblas0`.
 
 To download ngsTools and its submodules use:
 
@@ -78,7 +81,7 @@ To install these tools just run:
     % cd ngsTools
     % make
 
-To run the tests:
+To run the tests (currently deprecated):
 
     % make test
 
@@ -127,13 +130,13 @@ __Authors__
 
 Matteo Fumagalli & Filipe G. Vieira.
 Other programmers and developers: Tyler Lynderoth, Rasmus Nielsen.
-Some lines of code have been 'taken' (and adapted) from: Thorfinn Korneliussen, Anders Albrechtsen, Jacob Crawford, Dean Ousby, Martin Sykora, Leo Diaz.
+Some lines of code have been and adapted from: Thorfinn Korneliussen, Anders Albrechtsen, Jacob Crawford, Dean Ousby, Martin Sykora, Leo Diaz.
 
 __Updates__
 
 If you want to be updated about new releases and fixed bugs please follow the github repository.
 For specific queries on the code, please use github features to raise issues.
-For informal questions (better on ngsTools and not ANGSD) feel free to contact Matteo Fumagalli, at mfumagalli82 [at] g mail [dot] com.
+For informal questions (better on ngsTools and not ANGSD) feel free to contact [Matteo Fumagalli](https://www.qmul.ac.uk/sbbs/staff/matteo-fumagalli.html).
 
 __Citation__
 
@@ -189,8 +192,13 @@ Estimation of genetic distances have been described here:
 	Vieira FG, Lassalle F, Korneliussen TS, Fumagalli M
 	Biological Journal of the Linnean Society. Special Issue: Collections-Based Research in the Genomic Era. 117(1):139–149
 
+LD estimation has been published here:
 
+	Fox EA, Wright AE, Fumagalli M, Vieira FG. ngsLD: evaluating linkage disequilibrium using genotype likelihoods. Bioinformatics. 2019 Oct 1;35(19):3855-3856. doi: 10.1093/bioinformatics/btz200. PMID: 30903149.
+	
+HMMploidy can be cited as:
 
+	Soraggi, Samuele; Rhodes, Johanna; Altinkaya, Isin; Tarrant, Oliver; Balloux, Francois; Fisher, Matthew C; Fumagalli, Matteo. HMMploidy: inference of ploidy levels from short-read sequencing data. Peer Community Journal, Volume 2 (2022), article no. e60. doi : 10.24072/pcjournal.178.
 
 
 
