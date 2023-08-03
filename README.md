@@ -106,6 +106,64 @@ __NOTE__: for developers only: if you wish to make changes and update the whole 
     # check that everything went well: 
     % git status
 
+To build the tool set into an [Apptainer](https://apptainer.org/) or
+[SingularityCE](https://sylabs.io/singularity/) container you can take the
+following definition file as a starting point:
+
+<details>
+<summary>
+Apptainer/SingularityCE container definition file
+</summary>
+
+```
+Bootstrap: docker
+From: ubuntu:20.04
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update -y
+
+    apt install -y git build-essential pkg-config
+    apt install -y libz-dev libbz2-dev liblzma-dev libcurl4-openssl-dev libssl-dev libgsl-dev
+
+    # this will build a specific commit (in this case commit 6505f80)
+    git clone --recursive https://github.com/mfumagalli/ngsTools.git
+    cd ngsTools
+
+    # this will build a specific commit (in this case commit 6505f80) #
+    # alternatively you can build the latest commit by commenting out the next two lines
+    git checkout 6505f80
+    git submodule update --init --recursive
+
+    make
+
+%environment
+    export LC_ALL=C
+
+%runscript
+    export PATH=/ngsTools/angsd:$PATH
+    export PATH=/ngsTools/ngsDist:$PATH
+    export PATH=/ngsTools/ngsF:$PATH
+    export PATH=/ngsTools/ngsF-HMM:$PATH
+    export PATH=/ngsTools/ngsLD:$PATH
+    export PATH=/ngsTools/ngsPopGen:$PATH
+    export PATH=/ngsTools/ngsSim:$PATH
+    export PATH=/ngsTools/ngsUtils:$PATH
+
+    $@
+
+%labels
+    Author Radovan Bast
+
+%help
+    You can build this container with:
+    $ sudo singularity build container.sif container.def
+    This is how I use this container image:
+    $ ./container.sif ngsDist [other arguments]
+    $ ./container.sif [some other NGS tool]
+```
+</details>
+
 
 Input Files
 -----------------------------------
