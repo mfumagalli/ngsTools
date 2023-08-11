@@ -126,7 +126,6 @@ From: ubuntu:20.04
     apt install -y git build-essential pkg-config
     apt install -y libz-dev libbz2-dev liblzma-dev libcurl4-openssl-dev libssl-dev libgsl-dev
 
-    # this will build a specific commit (in this case commit 6505f80)
     git clone --recursive https://github.com/mfumagalli/ngsTools.git
     cd ngsTools
 
