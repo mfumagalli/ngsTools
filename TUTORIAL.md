@@ -209,13 +209,13 @@ Before proceeding, we need to specify the reference and ancestral sequences.
 We are now printing the distribution of quality scores and per-site depths (global and per-sample).
 ```
 $ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL.qc -r 11\
-        -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+        -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -baq 1 \
 	-minMapQ 20 \
         -doQsDist 1 -doDepth 1 -doCounts 1 -maxDepth 500 &> /dev/null
 ```
 As input we give the list of BAM files with option `-b` and then specify the references sequence with `-ref` and the prefix for output files with `-out`.
 Please note that we are analysing only part of chromosome 11, indicated by `-r 11`.
-Additionally, ```-C 50``` reduces the effect of reads with excessive mismatches, while ```-baq 1``` computes base alignment quality as explained here ([BAQ](http://samtools.sourceforge.net/mpileup.shtml)) to rule out false SNPs close to INDELS, and ```-trim 0``` means that we are not trimming the ends of reads.
+Additionally, ```-baq 1``` computes base alignment quality as explained here ([BAQ](http://samtools.sourceforge.net/mpileup.shtml)) to rule out false SNPs close to INDELS, and ```-trim 0``` means that we are not trimming the ends of reads.
 With ```-minMapQ 20``` we filter out reads with low mapping quality.
 Finally, ```-maxDepth 500``` means that all sites with depth equal or greater than this value will be binned together, and ```-P 4``` means that I am using 4 threads.
 
@@ -411,7 +411,7 @@ Also, we are using a HWE-based prior with `-doPost 1`.
 Recalling also our choice for data filtering, our command line is:
 ```
 $ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL -r 11 \
-        -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+        -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -baq 1 \
         -minMapQ 20 -minQ 20 -minInd 15 -setMinDepth 60 -setMaxDepth 400 -doCounts 1 \
         -GL 1 -doMajorMinor 1 -doMaf 1 -skipTriallelic 1 \
         -SNP_pval 1e-3 \
@@ -476,7 +476,7 @@ We are using [ngsDist](https://github.com/fgvieira/ngsDist) to estimate pairwise
 Again, we run ANGSD to compute genotype psoterior probabilities assuming HWE and specifying the output format with `-doGeno`:
 ```
 $ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL -r 11 \
-        -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+        -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -baq 1 \
         -minMapQ 20 -minQ 20 -minInd 15 -setMinDepth 60 -setMaxDepth 400 -doCounts 1 \
         -GL 1 -doMajorMinor 1 -doMaf 1 -skipTriallelic 1 \
         -SNP_pval 1e-3 \
@@ -546,7 +546,7 @@ Admixture proportions can be estimated from genotype likelihoods using [NGSadmix
 This can be accomplished in ANGSD with the following command:
 ```
 $ANGSD/angsd -P 4 -b ALL.bamlist -ref $REF -out Results/ALL -r 11 \
-        -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+        -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -baq 1 \
         -minMapQ 20 -minQ 20 -minInd 15 -setMinDepth 60 -setMaxDepth 400 -doCounts 1 \
         -GL 1 -doMajorMinor 4 -doMaf 1 -skipTriallelic 1 \
 	-doGlf 2 -SNP_pval 1e-6 &> /dev/null
@@ -581,7 +581,7 @@ for POP in LWK TSI PEL;
 do
 	echo $POP
 	$ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -out Results/$POP -r 11 \
-        	-uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+        	-uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -baq 1 \
         	-minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
         	-GL 1 -doMajorMinor 1 -doMaf 1 -skipTriallelic 1 \
         	-doGlf 3 -SNP_pval 1e-3 &> /dev/null
@@ -631,7 +631,7 @@ for POP in LWK TSI PEL;
 do
 	echo $POP
 	$ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP.inbred -r 11 \
-        	-uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+        	-uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -baq 1 \
         	-minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
         	-GL 1 -doMajorMinor 1 -doMaf -1 -skipTriallelic 1 \
         	-SNP_pval 1e-3 \
@@ -652,7 +652,7 @@ do
 
 	# uncomment if you don't have these files already
 	$ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -out Results/$POP -r 11 \
-                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -baq 1 \
                 -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
                 -GL 1 -doMajorMinor 1 -doMaf 1 -skipTriallelic 1 \
                 -doGlf 3 -SNP_pval 1e-3 &> /dev/null
@@ -718,7 +718,7 @@ for POP in LWK TSI PEL
 do
 	echo $POP
 	$ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP -r 11 \
-		-uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+		-uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -baq 1 \
 		-minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
 		-GL 1 -doSaf 1 &> /dev/null
 done
@@ -808,7 +808,7 @@ for POP in LWK TSI PEL
 do
         echo $POP
         $ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $REF -out Results/${POP}.ref -r 11 \
-                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -baq 1 \
                 -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
                 -GL 1 -doSaf 1 &> /dev/null
 	$ANGSD/misc/realSFS Results/$POP.ref.saf.idx -P 4 2> /dev/null > Results/$POP.ref.sfs
@@ -949,7 +949,7 @@ for POP in LWK TSI PEL
 do
 	echo $POP
 	$ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP -r 11 \
-                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -baq 1 \
                 -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
                 -GL 1 -doSaf 1 \
 		-doThetas 1 -pest Results/$POP.sfs &> /dev/null
@@ -1004,7 +1004,7 @@ for POP in LWK TSI PEL
 do
         echo $POP
         $ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP -r 11 \
-                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -baq 1 \
                 -minMapQ 20 -minQ 20 -minInd 5 -setMinDepth 5 -setMaxDepth 200 -doCounts 1 \
                 -GL 1 -doMajorMinor 5 -doMaf 1 -skipTriallelic 1 \
                 -sites Data/snps.txt &> /dev/null
@@ -1030,7 +1030,7 @@ for POP in LWK TSI PEL
 do
         echo $POP
         $ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP -r 11 \
-                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -baq 1 \
                 -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
                 -GL 1 -doSaf 1 &> /dev/null
 done
@@ -1051,7 +1051,7 @@ for POP in TSI PEL
 do
         echo $POP
         $ANGSD/angsd -P 4 -b $POP.bamlist -ref $REF -anc $ANC -out Results/$POP -r 11 \
-                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 -baq 1 \
+                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -baq 1 \
                 -minMapQ 20 -minQ 20 -minInd 10 -setMinDepth 20 -setMaxDepth 200 -doCounts 1 \
                 -GL 1 -doSaf 1 \
 		-sites Data/intersect.txt &> /dev/null
